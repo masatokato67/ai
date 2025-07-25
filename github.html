@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHubの基本概念：リポジトリとブランチ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for better readability */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Lighter background */
+            color: #2d3748; /* Darker text color */
+        }
+        /* Custom styles for rounded corners and shadows */
+        .card {
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Deeper shadow */
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+        .section-title {
+            border-bottom: 3px solid #6366f1; /* Deeper blue underline */
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            color: #4338ca; /* Darker blue for titles */
+        }
+        .image-placeholder {
+            border-radius: 1rem; /* More rounded corners for images */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #a78bfa; /* Light purple border for images */
+            transition: transform 0.3s ease-in-out;
+        }
+        .image-placeholder:hover {
+            transform: scale(1.02); /* Slight zoom on hover */
+        }
+        .header-bg {
+            background: linear-gradient(to right, #6366f1, #a855f7); /* Gradient background for header */
+            color: white;
+            padding: 3rem 0;
+            border-bottom-left-radius: 2rem;
+            border-bottom-right-radius: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            color: #8b5cf6; /* Purple icon color */
+        }
+        .flow-step {
+            background-color: #f3f4f6; /* Light gray background for flow steps */
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .flow-step:not(:last-child)::after {
+            content: '↓'; /* Down arrow for flow */
+            position: absolute;
+            bottom: -2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: #8b5cf6;
+            animation: bounce 1s infinite; /* Simple bounce animation */
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="p-4 sm:p-8">
+    <div class="header-bg text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-pulse">
+            GitHubの基本概念を視覚的に理解しよう！
+        </h1>
+        <p class="text-xl sm:text-2xl font-light opacity-90">
+            バージョン管理と共同開発の基礎
+        </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 card">
+        <p class="text-lg mb-8 leading-relaxed text-gray-700">
+            GitHubは、複数の人が協力してソフトウェアを開発するためのオンラインプラットフォームです。Gitという「バージョン管理システム」を使い、コードの変更履歴を管理し、共同作業をスムーズにします。
+        </p>
+
+        <!-- リポジトリ (Repository) セクション -->
+        <section class="mb-12 p-4 bg-blue-50 bg-opacity-70 rounded-xl">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 section-title">
+                <i class="fas fa-box-open icon"></i> 1. リポジトリ (Repository) とは？
+            </h2>
+            <p class="text-lg mb-6 leading-relaxed text-gray-700">
+                リポジトリは、あなたの<strong class="text-indigo-600">プロジェクトのすべてのファイルと、その変更履歴をまとめて保管する「倉庫」</strong>のようなものです。
+            </p>
+            <p class="text-lg mb-6 leading-relaxed text-gray-700">
+                想像してみてください。あなたは新しいアプリを作るプロジェクトを始めました。このアプリに関する全ての情報（コード、デザイン、説明書、画像など）を一つの大きな箱に入れて管理します。この箱が「リポジトリ」です。
+            </p>
+            <ul class="list-none text-lg mb-6 pl-4">
+                <li class="mb-2"><i class="fas fa-folder icon"></i> <strong>中身</strong>:
+                    <ul class="list-none ml-8 mt-2">
+                        <li class="mb-1"><i class="fas fa-file-code text-green-500"></i> ソースコードファイル (`.js`, `.py`, `.html` など)</li>
+                        <li class="mb-1"><i class="fas fa-book text-yellow-500"></i> プロジェクトの説明書 (`README.md`)</li>
+                        <li class="mb-1"><i class="fas fa-image text-purple-500"></i> 画像やアイコンなどの素材</li>
+                        <li class="mb-1"><i class="fas fa-history text-red-500"></i> そして、<strong class="text-indigo-600">全ての変更履歴</strong>（いつ、誰が、何を、どのように変更したか）</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="flex justify-center mb-8">
+                <img src="https://placehold.co/600x300/c7d2fe/4f46e5?text=Repository+%E3%81%AF%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AE%E3%80%8C%E5%80%89%E5%BA%AB%E3%80%8D%0A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%A8%E5%B1%A5%E6%AD%B4%E3%82%92%E4%BF%9D%E7%AE%A1"
+                     alt="リポジトリの概念図：プロジェクトのファイルと履歴を格納する倉庫"
+                     class="max-w-full h-auto image-placeholder">
+            </div>
+
+            <p class="text-lg mb-6 leading-relaxed text-gray-700">
+                <strong class="text-indigo-600">ポイント</strong>: リポジトリは単なるフォルダではなく、「タイムマシン」のように過去の状態をいつでも呼び出せる履歴機能も備えています。
+            </p>
+        </section>
+
+        <!-- ブランチ (Branch) セクション -->
+        <section class="mb-12 p-4 bg-purple-50 bg-opacity-70 rounded-xl">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 section-title">
+                <i class="fas fa-code-branch icon"></i> 2. ブランチ (Branch) とは？
+            </h2>
+            <p class="text-lg mb-6 leading-relaxed text-gray-700">
+                ブランチは、リポジトリ内のコードベースから<strong class="text-indigo-600">「枝分かれ」して作られる、独立した開発ライン</strong>です。例えるなら、一本の大きな木の幹（メインのコード）から、新しい枝（新しい機能の開発）が伸びていくようなイメージです。
+            </p>
+
+            <div class="flex justify-center mb-8">
+                <img src="https://placehold.co/600x300/e9d5ff/7c3aed?text=Branch+%E3%81%AF%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AE%E3%80%8C%E6%9E%9D%E5%88%86%E3%81%8B%E3%82%8C%E3%80%8D%0A%E7%8B%AC%E7%AB%8B%E3%81%97%E3%81%9F%E9%96%8B%E7%99%BA%E3%83%A9%E3%82%A4%E3%83%B3"
+                     alt="ブランチの概念図：木の幹から枝が伸びるように開発ラインが枝分かれ"
+                     class="max-w-full h-auto image-placeholder">
+            </div>
+
+            <h3 class="text-xl sm:text-2xl font-semibold mb-4 text-indigo-700">
+                なぜブランチが必要なの？
+            </h3>
+            <ul class="list-none text-lg mb-6 pl-4 leading-relaxed space-y-3">
+                <li>
+                    <i class="fas fa-shield-alt icon text-green-600"></i> <strong class="text-indigo-600">安定版の保護</strong>:
+                    <p class="ml-8 mt-1 text-gray-700">通常、「`main`」や「`master`」といった「幹」となるブランチは、安定して動くコードを保持しています。新しい機能開発やバグ修正は、この安定版に影響を与えないよう、枝分かれしたブランチで行います。</p>
+                </li>
+                <li>
+                    <i class="fas fa-users-cog icon text-blue-600"></i> <strong class="text-indigo-600">並行作業の実現</strong>:
+                    <p class="ml-8 mt-1 text-gray-700">複数の開発者が同時に異なる機能開発を行う場合、それぞれが自分のブランチで独立して作業を進めることで、コードの衝突を最小限に抑えられます。</p>
+                </li>
+                <li>
+                    <i class="fas fa-flask icon text-yellow-600"></i> <strong class="text-indigo-600">試行錯誤と実験</strong>:
+                    <p class="ml-8 mt-1 text-gray-700">新しいアイデアを試す際、一時的なブランチを作成して自由に実験できます。うまくいけば統合し、うまくいかなければ削除するだけで、メインのコードには影響しません。</p>
+                </li>
+            </ul>
+
+            <h3 class="text-xl sm:text-2xl font-semibold mb-4 text-indigo-700">
+                ブランチを使った開発の流れ（イメージ）
+            </h3>
+            <div class="space-y-10">
+                <!-- ステップ1 -->
+                <div class="flow-step">
+                    <p class="text-lg font-medium mb-2"><i class="fas fa-play-circle icon"></i> 1. <strong class="text-indigo-600">スタート</strong>: `main`ブランチ (安定版)</p>
+                    <div class="flex justify-center">
+                        <img src="https://placehold.co/600x80/d1d5db/4b5563?text=1.+main+branch+(stable)"
+                             alt="ブランチ開発の流れ1：メインブランチ（安定版）"
+                             class="max-w-full h-auto image-placeholder">
+                    </div>
+                </div>
+                <!-- ステップ2 -->
+                <div class="flow-step">
+                    <p class="text-lg font-medium mb-2"><i class="fas fa-code-branch icon"></i> 2. <strong class="text-indigo-600">枝分かれ</strong>: 新しい機能開発のために、`main`からブランチを作成します。</p>
+                    <div class="flex justify-center">
+                        <img src="https://placehold.co/600x120/c7d2fe/4f46e5?text=2.+%E6%9E%9D%E5%88%86%E3%81%8B%E3%82%8C%EF%BC%9Afeature/new-feature"
+                             alt="ブランチ開発の流れ2：メインブランチから新しいブランチが枝分かれ"
+                             class="max-w-full h-auto image-placeholder">
+                    </div>
+                </div>
+                <!-- ステップ3 -->
+                <div class="flow-step">
+                    <p class="text-lg font-medium mb-2"><i class="fas fa-pencil-alt icon"></i> 3. <strong class="text-indigo-600">独立した作業</strong>: 新しいブランチでコードを書き、変更を記録（コミット）します。`main`ブランチはそのまま安定した状態を保ちます。</p>
+                    <div class="flex justify-center">
+                        <img src="https://placehold.co/600x120/e9d5ff/7c3aed?text=3.+%E7%8B%AC%E7%AB%8B%E3%81%97%E3%81%9F%E4%BD%9C%E6%A5%AD%EF%BC%9Afeature/new-feature+%E3%81%A7%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88"
+                             alt="ブランチ開発の流れ3：フィーチャーブランチで独立して作業しコミット"
+                             class="max-w-full h-auto image-placeholder">
+                    </div>
+                </div>
+                <!-- ステップ4 -->
+                <div class="flow-step">
+                    <p class="text-lg font-medium mb-2"><i class="fas fa-check-circle icon"></i> 4. <strong class="text-indigo-600">合流 (マージ)</strong>: 開発が完了し、テストもOKだったら、新しいブランチの変更を`main`ブランチに合流させます（マージ）。</p>
+                    <div class="flex justify-center">
+                        <img src="https://placehold.co/600x120/bfdbfe/2563eb?text=4.+%E5%90%88%E6%B5%81%EF%BC%88%E3%83%9E%E3%83%BC%E3%82%B8%EF%BC%89%EF%BC%9Afeature/new-feature+%E3%82%92+main+%E3%81%AB%E3%83%9E%E3%83%BC%E3%82%B8"
+                             alt="ブランチ開発の流れ4：フィーチャーブランチをメインブランチにマージ"
+                             class="max-w-full h-auto image-placeholder">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- まとめ -->
+        <section class="mt-12 text-center p-6 bg-gray-100 rounded-xl">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 section-title">まとめ</h2>
+            <p class="text-xl mb-4 leading-relaxed text-gray-700">
+                <strong class="text-indigo-600">リポジトリ</strong>: プロジェクトの全てのファイルと変更履歴を格納する「倉庫」。
+            </p>
+            <p class="text-xl mb-8 leading-relaxed text-gray-700">
+                <strong class="text-indigo-600">ブランチ</strong>: リポジトリ内のコードベースから派生した、独立した「開発ライン」。安定したコードを保護し、並行開発を可能にします。
+            </p>
+            <p class="text-lg leading-relaxed text-gray-700">
+                GitHubは、これらの概念を理解することで、より効率的かつ安全にソフトウェア開発を進めることができる強力なツールです。
+            </p>
+        </section>
+    </div>
+</body>
+</html>
