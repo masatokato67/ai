@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東京における自動化フットサル大会運営ビジネス インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2rem;
+            color: #0a9396;
+            margin: 0 1rem;
+        }
+        .flow-arrow-down::after {
+            content: '↓';
+            font-size: 2rem;
+            color: #0a9396;
+            display: block;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-[#f8f9fa] text-[#212529]">
+
+    <header class="bg-[#005f73] text-white text-center py-12 px-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">東京のフットサルを変革する</h1>
+        <p class="text-lg md:text-xl max-w-3xl mx-auto">テクノロジーで加速する、次世代の自動化フットサル大会運営ビジネスモデル</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-4 md:p-8">
+
+        <section id="value-proposition" class="text-center my-16">
+            <h2 class="text-3xl font-bold text-[#005f73] mb-4">私たちの提供価値</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 mb-12">私たちは、参加者、施設、スポンサーの三者に、これまでにない新しい価値を提供します。テクノロジーを駆使し、フットサルに関わる全ての人がより豊かになるエコシステムを構築します。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-[#0a9396]">
+                    <div class="text-4xl mb-4">👤</div>
+                    <h3 class="text-xl font-bold text-[#005f73] mb-2">参加チームへ</h3>
+                    <p class="text-gray-600">オンラインで完結する手軽な参加体験と、公平で質の高い大会運営を提供します。</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-[#ee9b00]">
+                    <div class="text-4xl mb-4">🏟️</div>
+                    <h3 class="text-xl font-bold text-[#005f73] mb-2">フットサル施設へ</h3>
+                    <p class="text-gray-600">大会開催による安定したコート稼働率の向上と、新たな集客機会を創出します。</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg border-l-4 border-[#ca6702]">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold text-[#005f73] mb-2">協賛企業へ</h3>
+                    <p class="text-gray-600">熱量の高いフットサル愛好者層へ直接アプローチできる、効果的な広告媒体となります。</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-16">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-[#005f73] mb-2">主要な顧客セグメント</h2>
+                <p class="text-gray-600 mb-6">私たちのビジネスは、主に3つの顧客セグメントで構成されています。中心となるのはフットサルチームであり、彼らを中心にビジネスエコシステムが形成されます。</p>
+                <div class="chart-container">
+                    <canvas id="customerSegmentsChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-[#005f73] mb-2">収益の流れ</h2>
+                <p class="text-gray-600 mb-6">収益の大部分は大会参加費から得られますが、事業の成長と共に協賛金や広告収入の割合を高め、安定した収益基盤を確立します。</p>
+                <div class="chart-container">
+                    <canvas id="revenueStreamsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <section id="channels" class="my-16 bg-white p-6 md:p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold text-[#005f73] text-center mb-4">顧客へのアプローチ (チャネル)</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 mb-8 text-center">オンラインプラットフォームをハブとし、多様なデジタルチャネルを駆使してターゲット顧客にリーチします。各チャネルの相乗効果で、効率的な集客を実現します。</p>
+            <div class="chart-container" style="max-width: 800px; height: 400px;">
+                <canvas id="channelsChart"></canvas>
+            </div>
+        </section>
+
+        <section id="key-activities" class="my-16">
+            <h2 class="text-3xl font-bold text-[#005f73] text-center mb-4">ビジネスを動かす主要活動</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 mb-12 text-center">私たちのビジネスの中核は、テクノロジーによる自動化です。プラットフォームの開発から大会運営まで、一連の活動がシームレスに連携します。</p>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md w-full md:w-1/4">
+                    <h3 class="text-lg font-bold text-[#005f73]">① プラットフォーム開発・運用</h3>
+                </div>
+                <div class="hidden md:block flow-arrow"></div>
+                <div class="block md:hidden flow-arrow-down"></div>
+                <div class="bg-white p-6 rounded-lg shadow-md w-full md:w-1/4">
+                    <h3 class="text-lg font-bold text-[#005f73]">② マーケティング & 集客</h3>
+                </div>
+                <div class="hidden md:block flow-arrow"></div>
+                <div class="block md:hidden flow-arrow-down"></div>
+                <div class="bg-white p-6 rounded-lg shadow-md w-full md:w-1/4">
+                    <h3 class="text-lg font-bold text-[#005f73]">③ 大会企画 & コート確保</h3>
+                </div>
+                <div class="hidden md:block flow-arrow"></div>
+                <div class="block md:hidden flow-arrow-down"></div>
+                <div class="bg-white p-6 rounded-lg shadow-md w-full md:w-1/4">
+                    <h3 class="text-lg font-bold text-[#005f73]">④ 自動化された大会運営</h3>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 my-16">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-[#005f73] mb-2">主要パートナーシップ</h2>
+                <p class="text-gray-600 mb-6">事業の成功には、強力なパートナーとの連携が不可欠です。各分野の専門家と協力し、最高のサービスを提供します。</p>
+                <ul class="space-y-3">
+                    <li class="flex items-center"><span class="text-xl mr-3 text-[#0a9396]">🏟️</span>フットサルコート施設</li>
+                    <li class="flex items-center"><span class="text-xl mr-3 text-[#0a9396]">💳</span>決済サービスプロバイダー</li>
+                    <li class="flex items-center"><span class="text-xl mr-3 text-[#0a9396]">☁️</span>クラウドサービスプロバイダー</li>
+                    <li class="flex items-center"><span class="text-xl mr-3 text-[#0a9396]">⚽</span>スポーツ用品・飲料メーカー</li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-bold text-[#005f73] mb-2">コスト構造</h2>
+                <p class="text-gray-600 mb-6">初期投資としてプラットフォーム開発費が大きな割合を占めますが、自動化により運営フェーズでの人件費を抑制。スケーラブルなコスト構造を目指します。</p>
+                <div class="chart-container">
+                    <canvas id="costStructureChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-[#005f73] text-white text-center py-8 px-4 mt-16">
+        <p>東京のフットサルシーンに、新たなスタンダードを。</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const brilliantBlues = ['#0a9396', '#ee9b00', '#ca6702', '#94d2bd', '#bb3e03'];
+            const brilliantBluesBg = ['rgba(10, 147, 150, 0.8)', 'rgba(238, 155, 0, 0.8)', 'rgba(202, 103, 2, 0.8)', 'rgba(148, 210, 189, 0.8)', 'rgba(187, 62, 3, 0.8)'];
+
+            const wrapLabels = (labels, maxWidth) => {
+                return labels.map(label => {
+                    if (label.length <= maxWidth) {
+                        return label;
+                    }
+                    let words = label.split('');
+                    let lines = [];
+                    let currentLine = '';
+                    words.forEach(word => {
+                        if ((currentLine + word).length > maxWidth) {
+                            lines.push(currentLine);
+                            currentLine = '';
+                        }
+                        currentLine += word;
+                    });
+                    lines.push(currentLine);
+                    return lines;
+                });
+            };
+            
+            const getTooltipConfig = () => ({
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join('');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const customerSegmentsCtx = document.getElementById('customerSegmentsChart');
+            if (customerSegmentsCtx) {
+                new Chart(customerSegmentsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['フットサルチーム', 'フットサルコート施設', '協賛企業'],
+                        datasets: [{
+                            label: '顧客セグメント',
+                            data: [65, 20, 15],
+                            backgroundColor: brilliantBlues,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...getTooltipConfig().plugins,
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+
+            const revenueStreamsCtx = document.getElementById('revenueStreamsChart');
+            if (revenueStreamsCtx) {
+                new Chart(revenueStreamsCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['大会参加費', '協賛金', '広告収入', 'その他オプション'],
+                        datasets: [{
+                            label: '収益源',
+                            data: [70, 20, 5, 5],
+                            backgroundColor: brilliantBlues,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...getTooltipConfig().plugins,
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+
+            const channelsCtx = document.getElementById('channelsChart');
+            if (channelsCtx) {
+                new Chart(channelsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['オンラインプラットフォーム', 'SNSマーケティング', 'SEO', '口コミ・リファラル', '施設内広告'],
+                        datasets: [{
+                            label: 'チャネル重要度',
+                            data: [95, 85, 70, 65, 40],
+                            backgroundColor: brilliantBluesBg,
+                            borderColor: brilliantBlues,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...getTooltipConfig().plugins,
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+
+            const costStructureCtx = document.getElementById('costStructureChart');
+            if (costStructureCtx) {
+                const costLabels = ['プラットフォーム開発・維持費', 'フットサルコート利用料', 'マーケティング・広告宣伝費', '人件費', 'その他'];
+                new Chart(costStructureCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: wrapLabels(costLabels, 10),
+                        datasets: [{
+                            label: 'コスト構造',
+                            data: [40, 25, 20, 10, 5],
+                            backgroundColor: brilliantBlues,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            ...getTooltipConfig().plugins,
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
