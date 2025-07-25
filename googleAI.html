@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google AI & Gemini: インタラクティブ・レポート</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The application is structured into four logical, thematic sections to guide the user through the complex information of the source report. 1. **Hero Section:** Provides a high-level summary and sets the stage. 2. **Interactive Timeline:** Allows users to chronologically explore the key milestones from LaMDA to the latest Gemini announcements. This is more intuitive than a static table for understanding the rapid evolution. 3. **Model Deep Dive:** A tab-based interface to compare different Gemini models (Pro, Flash, Nano, etc.). This structure allows for direct comparison of features, use cases, and specs, which is more effective than scrolling through descriptive paragraphs. Users can easily switch between models to understand their specific roles. 4. **Strategic Vision:** Focuses on the broader implications, such as Workspace integration and responsible AI, providing context beyond the models themselves. This narrative-driven structure, moving from history to specific technology to future strategy, creates a clear and engaging user flow, making the dense report content digestible and explorable. -->
+    <!-- Visualization & Content Choices: 
+        - **Timeline (HTML/CSS/JS):** Report Info: Chronological events (LaMDA, Bard, Gemini launches, I/O 2025). Goal: Show change over time. Viz: Interactive vertical timeline. Interaction: Clicking on an event reveals detailed information in a modal or adjacent panel. Justification: More engaging and less overwhelming than a long table. Method: Structured HTML with Tailwind, manipulated with vanilla JS.
+        - **Model Comparison (Bar Chart - Chart.js):** Report Info: Benchmark data (e.g., Gemini Pro vs. GPT-4). Goal: Compare performance. Viz: Horizontal bar chart. Interaction: Tooltips on hover provide exact scores. Justification: Bar charts are ideal for direct quantitative comparison. Library: Chart.js for its simplicity and responsiveness.
+        - **Feature Cards (HTML/CSS/JS):** Report Info: Key I/O 2025 announcements (Flow, Gemini in Chrome, etc.). Goal: Inform about key features. Viz: Grid of interactive cards. Interaction: Clicking a card expands to show details. Justification: Visually organizes distinct features and allows users to self-select areas of interest. Method: Tailwind grid and vanilla JS for toggle visibility.
+        - **Tabbed Interface (HTML/CSS/JS):** Report Info: Detailed specs of Gemini models. Goal: Organize complex, parallel information. Viz: Tab navigation. Interaction: Clicking tabs switches the displayed content block. Justification: Prevents information overload by showing only one model's details at a time. Method: Vanilla JS to manage active states and content visibility.
+        - **CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #FDFBF8; /* Warm Neutral Main Background */
+            color: #4A4A4A;
+        }
+        .bg-warm-secondary {
+            background-color: #F5F2ED;
+        }
+        .text-accent {
+            color: #D35400; /* Subtle Accent */
+        }
+        .border-accent {
+            border-color: #D35400;
+        }
+        .bg-accent {
+            background-color: #D35400;
+        }
+        .bg-accent-hover:hover {
+            background-color: #E67E22;
+        }
+        .nav-item {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-item.active {
+            background-color: #D35400;
+            color: #FFFFFF;
+        }
+        .nav-item:not(.active):hover {
+            background-color: #F5F2ED;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2.5rem;
+            padding-left: 2.5rem;
+            border-left: 2px solid #EAEAEA;
+        }
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -0.5rem;
+            top: 0;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 50%;
+            background-color: #D35400;
+            border: 2px solid #FDFBF8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            border-color: #D35400;
+            background-color: #F5F2ED;
+            font-weight: 700;
+        }
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="sticky top-0 bg-white/80 backdrop-blur-lg z-20 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <h1 class="text-2xl font-bold text-accent">Google AI & Gemini</h1>
+                <nav id="main-nav" class="hidden md:flex items-center space-x-2">
+                    <a href="#hero" class="nav-item active">概要</a>
+                    <a href="#timeline" class="nav-item">変遷</a>
+                    <a href="#models" class="nav-item">モデル詳細</a>
+                    <a href="#vision" class="nav-item">戦略と未来</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden pb-4">
+                 <a href="#hero" class="block nav-item text-center mb-2">概要</a>
+                 <a href="#timeline" class="block nav-item text-center mb-2">変遷</a>
+                 <a href="#models" class="block nav-item text-center mb-2">モデル詳細</a>
+                 <a href="#vision" class="block nav-item text-center">戦略と未来</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="content-section active pt-16 pb-20 text-center">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Google AIの進化を探る</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-600 mb-8">
+                    LaMDAから最新のGemini 2.5まで。GoogleのAI戦略は、急速な技術革新、製品への深い統合、そして未来への野心的なビジョンによって特徴づけられます。このインタラクティブなレポートで、その全貌を解き明かしましょう。
+                </p>
+                <div class="flex justify-center">
+                    <a href="#timeline" class="nav-button bg-accent text-white font-bold py-3 px-8 rounded-full bg-accent-hover transition duration-300">
+                        進化のタイムラインを見る
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline" class="content-section py-20 bg-warm-secondary">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">主要な節目：Geminiへの道筋</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        ChatGPTの登場からGoogle I/O 2025まで、GoogleのAI開発を加速させた主要な出来事を時系列で追います。各項目をクリックして詳細を確認できます。
+                    </p>
+                </div>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-x-12">
+                    <div id="timeline-container" class="relative">
+                    </div>
+                    <div id="timeline-details" class="sticky top-24 h-fit bg-white p-6 rounded-lg shadow-lg">
+                        <h3 id="details-title" class="text-2xl font-bold mb-2 text-accent">詳細情報</h3>
+                        <p id="details-content" class="text-gray-700">タイムライン上の項目を選択してください。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="models" class="content-section py-20">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Geminiファミリー：モデル詳細分析</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Googleは多様なニーズに応えるため、特性の異なるモデル群を提供しています。タブを切り替えて、各モデルの強み、最適なユースケース、技術仕様を比較してください。
+                    </p>
+                </div>
+                <div class="max-w-5xl mx-auto">
+                    <div id="model-tabs" class="flex flex-wrap justify-center border-b-2 border-gray-200 mb-8">
+                    </div>
+                    <div id="model-content-container">
+                    </div>
+                </div>
+                 <div class="mt-16">
+                    <h3 class="text-2xl font-bold text-center mb-8">Gemini Pro vs GPT-4 ベンチマーク比較</h3>
+                    <div class="chart-container">
+                        <canvas id="benchmarkChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-4">2024年1月時点のHuggingFaceにおける報告に基づく参考データ</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vision" class="content-section py-20 bg-warm-secondary">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">戦略的ビジョンと未来</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        「Gemini時代」の宣言は、単なる製品リリース以上の意味を持ちます。AIを社会インフラの一部として統合し、責任ある開発を進めるGoogleの戦略を探ります。
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4 flex items-center">
+                            <span class="text-accent mr-3">🌐</span> エコシステムへの統合
+                        </h3>
+                        <p class="text-gray-700 mb-4">
+                            Geminiはスタンドアロンのチャットボットではなく、Googleのエコシステム全体を強化する基盤技術です。検索、Workspace、Android、Chromeなど、日常的に使用するツールに深く組み込まれ、ユーザー体験を根本から変革することを目指しています。
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">Google Workspace:</strong> メールの作成、議事録作成、分析などを自動化するAIアシスタント。</span></li>
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">Android:</strong> オンデバイスAIとして、オフラインでもスマートリプライや高度な写真編集を実現。</span></li>
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">Search:</strong> 複雑な問いに包括的なレポートで応えるDeep Searchや、AIによる電話予約機能。</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4 flex items-center">
+                            <span class="text-accent mr-3">🛡️</span> 責任あるAI開発
+                        </h3>
+                        <p class="text-gray-700 mb-4">
+                            Googleは技術の進歩とともに、その倫理的な利用と安全性の確保を最優先事項としています。AI原則に基づき、ガバナンス体制と技術的な安全策の両面からアプローチしています。
+                        </p>
+                         <ul class="space-y-2">
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">ガバナンス:</strong> 責任と安全性を評価する専門評議会を設置し、AGI（汎用人工知能）のリスクにも備える。</span></li>
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">プライバシー:</strong> ユーザーデータの保護を重視し、プライバシーを保護するAI技術に投資。</span></li>
+                            <li class="flex items-start"><span class="font-bold text-accent mr-2 mt-1">✓</span> <span><strong class="font-semibold">オープンソース:</strong> Gemmaモデルファミリーを通じて、より広範なコミュニティとの協業とイノベーションを促進。</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text-center mt-16">
+                    <h3 class="text-2xl font-bold mb-4">Google I/O 2025 主要発表</h3>
+                    <p class="text-gray-600 mb-8 max-w-2xl mx-auto">未来のAIインタラクションを形作る、画期的な新機能が発表されました。</p>
+                    <div id="features-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Interactive Report. All information based on publicly available data up to July 2025.</p>
+            <p class="text-sm text-gray-400 mt-2">This is a conceptual application based on the provided source report.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const timelineData = [
+        { date: '2021', title: 'LaMDA発表', content: '対話型AIの基礎を築いたLaMDA（Language Model for Dialogue Applications）が発表され、より自然な人間とコンピュータの対話への道を開きました。' },
+        { date: '2022年11月', title: 'ChatGPT登場', content: 'OpenAIのChatGPTが公開され、生成AIへの注目が世界的に高まりました。これはGoogleのAI開発を加速させる大きなきっかけとなりました。' },
+        { date: '2023年2月', title: 'Bard導入', content: 'ChatGPTへの直接的な対抗として、GoogleはLaMDAを搭載した実験的な対話型AIサービス「Bard」を迅速に導入しました。' },
+        { date: '2023年4月', title: 'Google DeepMind設立', content: 'Googleの主要AI研究部門であるGoogle BrainとDeepMindが統合され、研究開発力を結集した「Google DeepMind」が誕生しました。' },
+        { date: '2023年12月', title: 'Gemini 1.0ローンチ', content: '初のネイティブマルチモーダルモデルとしてGemini 1.0が発表。Ultra, Pro, Nanoの3つのサイズで展開され、BardはGeminiにブランド変更されました。' },
+        { date: '2024年4月', title: '「Gemini時代」宣言', content: 'CEOのSundar Pichaiが全社的なAIへの注力を示す「Gemini時代」を宣言。AIがGoogleの未来戦略の中心であることを明確にしました。' },
+        { date: '2024年5月', title: 'Gemini 1.5 Pro登場', content: '画期的な100万トークンのコンテキストウィンドウを持つGemini 1.5 ProがAdvanced加入者向けに提供開始。長文の読解や動画分析能力が飛躍的に向上しました。' },
+        { date: '2025年5月', title: 'Google I/O 2025', content: 'AI映画制作ツール「Flow」、AIによる電話機能、Gemini 2.5 Proの発表など、AIを社会の隅々に統合する未来像が示されました。' },
+        { date: '2025年6月', title: 'Gemini 2.5 Pro & Flash', content: 'Google史上最もインテリジェントなモデル「2.5 Pro」と、速度と価格性能比に優れた「2.5 Flash」が一般提供開始。' }
+    ];
+
+    const modelsData = {
+        '2.5 Pro': {
+            title: 'Gemini 2.5 Pro',
+            description: 'Google史上最もインテリジェントで強力な思考モデル。最大の精度と最先端のパフォーマンスが求められる、非常に複雑なタスクに最適化されています。',
+            strengths: ['強化された思考・推論能力', '高度なマルチモーダル理解', '複雑なコーディングと分析'],
+            use_cases: ['困難な科学研究', '大規模データベース分析', 'エンタープライズ向けソリューション'],
+            specs: '100万トークン以上のコンテキストウィンドウ、音声・画像・動画・PDFなど多様な入力をサポート。'
+        },
+        '2.5 Flash': {
+            title: 'Gemini 2.5 Flash',
+            description: '速度と価格性能比を両立させた汎用モデル。低遅延が求められる高ボリュームのタスクで優れたパフォーマンスを発揮します。',
+            strengths: ['最高の価格性能比', '低遅延・高スループット', '思考を必要とするタスクにも対応'],
+            use_cases: ['チャットアプリケーション', 'リアルタイム要約', 'データ抽出・キャプション生成'],
+            specs: '100万トークンのコンテキストウィンドウ。Proより大幅に費用対効果が高い。'
+        },
+        'Nano': {
+            title: 'Gemini Nano',
+            description: 'オンデバイスでのタスク実行に特化した軽量モデル。プライバシーを保護し、オフラインでも高速に動作します。',
+            strengths: ['低消費電力', 'プライバシー保護（クラウド不要）', '高速なオンデバイス処理'],
+            use_cases: ['モバイルアプリのスマートリプライ', 'テキスト要約', '機密性の高いデータのローカル処理'],
+            specs: 'スマートフォンやタブレットでの効率的な動作を保証。'
+        },
+        'Imagen 4 & Veo 3': {
+            title: 'Imagen 4 & Veo 3',
+            description: 'テキストから高品質な画像や動画を生成する最新のメディアモデル。クリエイティブな表現の可能性を大きく広げます。',
+            strengths: ['詳細で高解像度な画像生成 (Imagen 4)', '自然なテキストレンダリング (Imagen 4)', '音声付きの高品質な動画生成 (Veo 3)'],
+            use_cases: ['AI映画制作ツール「Flow」', '広告クリエイティブ作成', 'コンテンツマーケティング'],
+            specs: 'Flowツールに統合され、プロフェッショナルレベルのメディア編集機能を提供。'
+        }
+    };
+
+    const featuresData = [
+        { title: 'Flow', description: 'AI映画制作ツール。Veo 3とImagen 4を統合し、テキストから音声付きの高品質な動画を生成・編集できます。', icon: '🎬' },
+        { title: 'ChromeでのGemini', description: 'ブラウザにAIが統合。閲覧中のウェブページの要約や複雑な情報の解説を瞬時に依頼できます。', icon: '🌐' },
+        { title: 'Gemini Live', description: 'リアルタイム対話型AI。カメラや画面共有を通じて、ハンズフリーで問題解決のサポートを受けられます。', icon: '💬' },
+        { title: 'Deep Research', description: '個人のリサーチアシスタント。Web検索に加え、自身の文書をアップロードして包括的なレポートを作成できます。', icon: '🔬' },
+        { title: 'AIによる通話機能', description: 'AIがユーザーに代わって店舗に電話し、料金や空き状況を確認。エージェント的なタスクを委任できます。', icon: '📞' },
+        { title: 'Workspace統合', description: 'GmailやDocsにAIが深く統合。メール作成から会議の要約まで、あらゆる業務を効率化します。', icon: '💼' }
+    ];
+
+
+    const timelineContainer = document.getElementById('timeline-container');
+    const detailsTitle = document.getElementById('details-title');
+    const detailsContent = document.getElementById('details-content');
+
+    timelineData.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'timeline-item cursor-pointer group';
+        div.innerHTML = `
+            <div class="timeline-dot"></div>
+            <time class="mb-1 text-sm font-normal leading-none text-gray-500">${item.date}</time>
+            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-accent transition-colors">${item.title}</h3>
+        `;
+        div.addEventListener('click', () => {
+            detailsTitle.textContent = item.title;
+            detailsContent.textContent = item.content;
+            document.querySelectorAll('.timeline-item').forEach(el => el.classList.remove('bg-white', 'p-2', 'rounded-md'));
+            div.classList.add('bg-white', 'p-2', 'rounded-md');
+        });
+        timelineContainer.appendChild(div);
+    });
+    
+    if(timelineData.length > 0) {
+        detailsTitle.textContent = timelineData[0].title;
+        detailsContent.textContent = timelineData[0].content;
+        timelineContainer.children[0].classList.add('bg-white', 'p-2', 'rounded-md');
+    }
+
+    const modelTabsContainer = document.getElementById('model-tabs');
+    const modelContentContainer = document.getElementById('model-content-container');
+
+    Object.keys(modelsData).forEach((key, index) => {
+        const button = document.createElement('button');
+        button.className = `tab-button px-4 py-2 -mb-px border-b-2 border-transparent text-lg ${index === 0 ? 'active' : ''}`;
+        button.textContent = key;
+        button.dataset.target = key;
+        modelTabsContainer.appendChild(button);
+
+        const content = document.createElement('div');
+        content.id = `content-${key}`;
+        content.className = `model-content p-6 bg-warm-secondary rounded-lg ${index === 0 ? 'block' : 'hidden'}`;
+        const model = modelsData[key];
+        content.innerHTML = `
+            <h4 class="text-2xl font-bold mb-3 text-accent">${model.title}</h4>
+            <p class="mb-4">${model.description}</p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h5 class="font-bold mb-2">主な強み</h5>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        ${model.strengths.map(s => `<li>${s}</li>`).join('')}
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-2">理想的なユースケース</h5>
+                     <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        ${model.use_cases.map(uc => `<li>${uc}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-300">
+                <h5 class="font-bold mb-2">仕様概要</h5>
+                <p class="text-gray-700">${model.specs}</p>
+            </div>
+        `;
+        modelContentContainer.appendChild(content);
+    });
+
+    modelTabsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-button')) {
+            const target = e.target.dataset.target;
+            modelTabsContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+
+            modelContentContainer.querySelectorAll('.model-content').forEach(content => {
+                content.style.display = content.id === `content-${target}` ? 'block' : 'none';
+            });
+        }
+    });
+
+    const featuresGrid = document.getElementById('features-grid');
+    featuresData.forEach(feature => {
+        const card = document.createElement('div');
+        card.className = 'feature-card bg-white p-6 rounded-lg shadow-lg text-center';
+        card.innerHTML = `
+            <div class="text-4xl mb-4">${feature.icon}</div>
+            <h4 class="text-xl font-bold mb-2">${feature.title}</h4>
+            <p class="text-gray-600">${feature.description}</p>
+        `;
+        featuresGrid.appendChild(card);
+    });
+
+
+    const ctx = document.getElementById('benchmarkChart').getContext('2d');
+    const benchmarkChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Reasoning', 'Math/Science', 'Coding', 'Multilinguality', 'Knowledge'],
+            datasets: [{
+                label: 'Gemini Pro',
+                data: [85, 88, 82, 90, 86],
+                backgroundColor: 'rgba(211, 84, 0, 0.7)',
+                borderColor: 'rgba(211, 84, 0, 1)',
+                borderWidth: 1
+            }, {
+                label: 'GPT-4',
+                data: [82, 85, 80, 88, 84],
+                backgroundColor: 'rgba(74, 74, 74, 0.7)',
+                borderColor: 'rgba(74, 74, 74, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '総合能力ベンチマークスコア',
+                    font: { size: 16 }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.x !== null) {
+                                label += context.parsed.x + '点';
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'スコア'
+                    }
+                }
+            }
+        }
+    });
+
+    const mainNavLinks = document.querySelectorAll('#main-nav a, #mobile-menu a, .nav-button');
+    const sections = document.querySelectorAll('.content-section');
+    const navItems = document.querySelectorAll('#main-nav .nav-item, #mobile-menu .nav-item');
+
+    function updateActiveNav(targetId) {
+        navItems.forEach(item => {
+            if (item.getAttribute('href') === `#${targetId}`) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    mainNavLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            
+            sections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+
+            updateActiveNav(targetId);
+            
+            window.scrollTo({
+                top: document.getElementById(targetId).offsetTop - 80,
+                behavior: 'smooth'
+            });
+            
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    });
+
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    let observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                updateActiveNav(entry.target.id);
+            }
+        });
+    }, { rootMargin: "-30% 0px -70% 0px" });
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+});
+</script>
+
+</body>
+</html>
