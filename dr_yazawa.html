@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>湘南予防医科学研究所 - 所長 矢沢一良</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        .hero-bg {
+            background-image: url('https://placehold.co/1600x800/e2e8f0/334155?text=研究所イメージ');
+            background-size: cover;
+            background-position: center;
+        }
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- ヘッダー -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-gray-800">湘南予防医科学研究所</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#about" class="text-gray-600 hover:text-blue-600 transition duration-300">矢沢一良について</a>
+                <a href="#research" class="text-gray-600 hover:text-blue-600 transition duration-300">研究内容</a>
+                <a href="#media" class="text-gray-600 hover:text-blue-600 transition duration-300">メディア実績</a>
+                <a href="#contact" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300">お問い合わせ</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <!-- モバイルメニュー -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
+            <a href="#about" class="block py-2 text-gray-600 hover:text-blue-600">矢沢一良について</a>
+            <a href="#research" class="block py-2 text-gray-600 hover:text-blue-600">研究内容</a>
+            <a href="#media" class="block py-2 text-gray-600 hover:text-blue-600">メディア実績</a>
+            <a href="#contact" class="block mt-2 bg-blue-600 text-white px-4 py-2 rounded-full text-center">お問い合わせ</a>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main>
+        <!-- ヒーローセクション -->
+        <section class="hero-bg text-white relative">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+            <div class="container mx-auto px-6 py-32 text-center relative z-10 fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">予防医科学の力で、<br class="md:hidden">100年時代の健康を科学する</h1>
+                <p class="text-lg md:text-xl mb-8">アスタキサンチン研究の第一人者、矢沢一良が主宰する<br>健康長寿社会の実現を目指す研究所です。</p>
+                <a href="#about" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300">もっと知る</a>
+            </div>
+        </section>
+
+        <!-- ご挨拶・矢沢一良について -->
+        <section id="about" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="md:flex items-center">
+                    <div class="md:w-1/3 text-center mb-8 md:mb-0">
+                        <img src="https://placehold.co/300x400/e0e0e0/555555?text=矢沢一良+先生" alt="矢沢一良先生のポートレート" class="rounded-lg shadow-xl mx-auto">
+                    </div>
+                    <div class="md:w-2/3 md:pl-12">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">所長 ご挨拶</h2>
+                        <h3 class="text-xl font-semibold text-blue-600 mb-4">矢沢 一良（やざわ かずよし）</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            早稲田大学ナノ・ライフ創新研究機構 規範科学総合研究所ヘルスフード科学部門 研究院教授・農学博士。<br>
+                            専門は、油脂化学、食品化学、予防医科学。特に、海洋生物由来の機能性脂質（DHA、EPA）や、アスタキサンチン、リコピンといったカロテノイドの健康効果に関する研究で世界的に知られています。
+                        </p>
+                        <p class="text-gray-600 leading-relaxed">
+                            当研究所では、これまでの研究成果を社会に還元し、科学的根拠に基づいた正しい健康情報を提供することで、皆様の健康寿命延伸に貢献することを目指しています。食を通じた病気にならないための体づくり、「予防医科学」の可能性を追求し続けます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 研究内容 -->
+        <section id="research" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">研究内容</h2>
+                    <p class="text-gray-600 mt-2">科学的エビデンスに基づき、食品の新たな可能性を探求します。</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- 研究テーマ1: アスタキサンチン -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-red-500 inline-flex items-center justify-center rounded-full text-white text-3xl mb-4">
+                                <span>AX</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">アスタキサンチン</h3>
+                            <p class="text-gray-600">強力な抗酸化作用を持つ「スーパーカロテノイド」。抗疲労、眼精疲労改善、美肌効果など、多岐にわたる機能性を解明しています。</p>
+                        </div>
+                    </div>
+                    <!-- 研究テーマ2: 海洋脂質 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                         <div class="text-center">
+                            <div class="w-20 h-20 bg-blue-500 inline-flex items-center justify-center rounded-full text-white text-3xl mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 01-12 0 6 6 0 0112 0zM16 8v11m0-11a6 6 0 00-6-6m-6 6a6 6 0 006 6m6-6v11" /></svg>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">DHA・EPA</h3>
+                            <p class="text-gray-600">脳機能の維持や生活習慣病予防に不可欠なオメガ3系脂肪酸。供給源の探索から生理機能の解析まで幅広く研究しています。</p>
+                        </div>
+                    </div>
+                    <!-- 研究テーマ3: その他 -->
+                    <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-green-500 inline-flex items-center justify-center rounded-full text-white text-3xl mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">新規機能性素材</h3>
+                            <p class="text-gray-600">リコピン、セサミン、各種ポリフェノールなど、未利用資源も含めた新たな機能性食品素材の探索と事業化を支援します。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- メディア実績 -->
+        <section id="media" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">メディア・講演実績</h2>
+                    <p class="text-gray-600 mt-2">テレビ、雑誌、書籍、講演会など、多方面で情報を発信しています。</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <ul class="space-y-4">
+                        <li class="bg-gray-100 p-4 rounded-lg flex items-center">
+                            <span class="bg-blue-600 text-white text-sm font-bold px-3 py-1 rounded-full mr-4">書籍</span>
+                            <span>『アスタキサンチンがすごい！』 (出版社名)</span>
+                        </li>
+                        <li class="bg-gray-100 p-4 rounded-lg flex items-center">
+                            <span class="bg-green-600 text-white text-sm font-bold px-3 py-1 rounded-full mr-4">テレビ</span>
+                            <span>NHK「あさイチ」にて健康食材について解説</span>
+                        </li>
+                        <li class="bg-gray-100 p-4 rounded-lg flex items-center">
+                            <span class="bg-yellow-600 text-white text-sm font-bold px-3 py-1 rounded-full mr-4">雑誌</span>
+                            <span>健康雑誌「Tarzan」にて抗疲労成分について監修</span>
+                        </li>
+                         <li class="bg-gray-100 p-4 rounded-lg flex items-center">
+                            <span class="bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full mr-4">講演</span>
+                            <span>日本抗加齢医学会にて「予防医科学の最前線」をテーマに講演</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTAセクション (企業向け & メルマガ) -->
+        <section id="contact" class="bg-blue-700 text-white">
+            <div class="container mx-auto px-6 py-20">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <!-- 企業向け -->
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl font-bold mb-4">企業・研究機関の方へ</h2>
+                        <p class="mb-6">製品開発、共同研究、技術指導、講演依頼など、お気軽にご相談ください。食品の機能性研究に関する長年の知見を活かし、貴社のビジネスをサポートします。</p>
+                        <a href="#contact-form" class="bg-white text-blue-700 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300">お問い合わせフォームへ</a>
+                    </div>
+                    <!-- メルマガ登録 -->
+                    <div class="bg-white text-gray-800 p-8 rounded-lg shadow-2xl">
+                        <h3 class="text-2xl font-bold mb-4">無料メールマガジン登録</h3>
+                        <p class="text-gray-600 mb-6">最新の研究成果や、メディアでは語られない健康情報を定期的にお届けします。</p>
+                        <form>
+                            <input type="email" placeholder="メールアドレス" class="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+                            <button type="submit" class="w-full bg-red-500 text-white font-bold py-3 px-6 rounded-md hover:bg-red-600 transition duration-300">今すぐ登録する</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- お問い合わせフォーム -->
+        <section id="contact-form" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800">お問い合わせ</h2>
+                    <p class="text-gray-600 mt-2">下記フォームよりご連絡ください。内容を確認後、担当者よりご連絡いたします。</p>
+                </div>
+                <form class="bg-white p-8 rounded-lg shadow-lg">
+                    <div class="mb-4">
+                        <label for="name" class="block text-gray-700 font-bold mb-2">お名前</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="company" class="block text-gray-700 font-bold mb-2">企業・団体名</label>
+                        <input type="text" id="company" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email_contact" class="block text-gray-700 font-bold mb-2">メールアドレス</label>
+                        <input type="email" id="email_contact" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="message" class="block text-gray-700 font-bold mb-2">お問い合わせ内容</label>
+                        <textarea id="message" rows="6" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition duration-300">送信する</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2024 湘南予防医科学研究所. All Rights Reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">ウェブサイト制作協力: Gemini</p>
+        </div>
+    </footer>
+
+    <script>
+        // モバイルメニューのトグル
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
