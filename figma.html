@@ -42,6 +42,7 @@
         const BarChart2 = () => <Icon><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></Icon>;
         const Star = () => <Icon><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></Icon>;
         const Crown = () => <Icon><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></Icon>;
+        const PriceTag = () => <Icon><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></Icon>;
 
 
         // --- データ ---
@@ -249,7 +250,8 @@
                     <StatCard icon={<Target />} title="公開価格" value={`$${figmaData.ipoPrice.toFixed(2)}`} colorClass="text-blue-400" />
                     <StatCard icon={<TrendingUp />} title="初日終値" value={`$${figmaData.firstDayClose.toFixed(2)}`} subValue={`+${(((figmaData.firstDayClose - figmaData.ipoPrice) / figmaData.ipoPrice) * 100).toFixed(0)}%`} colorClass="text-pink-400" />
                     <StatCard icon={<Scale />} title="時価総額 (2025/8/4)" value={`$${figmaData.marketCap}`} subValue="億ドル" colorClass="text-green-400" />
-                    <div className="lg:col-span-2">
+                    <StatCard icon={<PriceTag />} title="現在の株価 (2025/8/4)" value={`$${figmaData.currentPrice.toFixed(2)}`} colorClass="text-yellow-400" />
+                    <div className="md:col-span-2 lg:col-span-4">
                       <IPOChart />
                     </div>
                   </div>
