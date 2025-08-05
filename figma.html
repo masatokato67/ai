@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma IPOデータビジュアライゼーション</title>
+    <!-- Tailwind CSSを読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ReactとReactDOMを読み込み -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babelを読み込み (JSXをブラウザで変換するため) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Google Fontsを読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* 日本語フォントを適用 */
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <!-- Reactアプリが描画されるコンテナ -->
+    <div id="root"></div>
+
+    <!-- Reactコンポーネントをここに記述 -->
+    <script type="text/babel">
+        // --- アイコンコンポーネント (Lucide-Reactの代替) ---
+        const Icon = ({ children }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
+        const TrendingUp = () => <Icon><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></Icon>;
+        const Zap = () => <Icon><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></Icon>;
+        const Target = () => <Icon><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></Icon>;
+        const Scale = () => <Icon><path d="m16 16 3-8 3 8c-2 1-4 1-6 0"/><path d="m2 16 3-8 3 8c-2 1-4 1-6 0"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></Icon>;
+        const Bot = () => <Icon><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></Icon>;
+        const Milestone = () => <Icon><path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4 4V8a2 2 0 0 0-2-2Z"/><path d="M12 18v-2"/><path d="M12 12V8"/></Icon>;
+        const XCircle = () => <Icon><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></Icon>;
+        const Handshake = () => <Icon><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 0 3 3l.88-.88a1 1 0 0 1 1.41 0l2.12 2.12"/><path d="m21 11-2-2a1 1 0 1 0-3 3"/><path d="m10 10-2.5-2.5a1 1 0 1 0-3 3l3.88 3.88a3 3 0 0 0 4.24 0l.88-.88a1 1 0 1 0-3-3l-.88.88a1 1 0 0 1-1.41 0l-2.12-2.12"/></Icon>;
+        const Landmark = () => <Icon><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></Icon>;
+        const BarChart2 = () => <Icon><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></Icon>;
+        const Star = () => <Icon><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></Icon>;
+        const Crown = () => <Icon><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></Icon>;
+
+
+        // --- データ ---
+        const figmaData = {
+          ipoDate: "2025年7月31日",
+          ticker: "FIG",
+          ipoPrice: 33.00,
+          firstDayClose: 115.50,
+          marketCap: 590, // 億ドル
+          currentPrice: 88.60,
+        };
+
+        const competitors = [
+          { name: "Figma", psr: 78.7, marketCap: 590, revenue: 7.5, growth: 46, color: "bg-pink-500" },
+          { name: "Adobe", psr: 8.0, marketCap: 1550, revenue: 194, growth: 10, color: "bg-gray-600" },
+          { name: "Autodesk", psr: 11.6, marketCap: 640, revenue: 55, growth: 12, color: "bg-gray-600" },
+          { name: "Salesforce", psr: 7.3, marketCap: 2530, revenue: 349, growth: 11, color: "bg-gray-600" },
+          { name: "Canva", psr: 19.2, marketCap: 490, revenue: 25.5, growth: 27.5, color: "bg-gray-600" },
+        ];
+
+        const timelineEvents = [
+          {
+            date: "2022年9月",
+            title: "Adobeが買収を発表",
+            description: "AdobeがFigmaを約200億ドルで買収する計画を発表。デザイン業界に衝撃が走る。",
+            icon: Handshake,
+            color: "text-blue-400",
+          },
+          {
+            date: "2023年",
+            title: "独禁法の調査",
+            description: "米・英・EUの規制当局が「市場の競争を阻害する」として厳しい調査を開始。",
+            icon: Scale,
+            color: "text-yellow-400",
+          },
+          {
+            date: "2023年12月",
+            title: "買収契約の破談",
+            description: "規制当局の承認が得られず、買収は白紙に。AdobeはFigmaに10億ドルの契約解除料を支払う。",
+            icon: XCircle,
+            color: "text-red-400",
+          },
+          {
+            date: "2025年7月31日",
+            title: "Figma、歴史的IPO",
+            description: `単独でNYSEに上場。時価総額は一時600億ドル近くに達し、Adobeの提示額を遥かに上回る評価を得る。`,
+            icon: Landmark,
+            color: "text-green-400",
+          },
+        ];
+
+        const insights = [
+            {
+                icon: Crown,
+                title: "「勝者総取り」市場の覇者へ",
+                description: "デザインツール市場はネットワーク効果が強く、Figmaがその勝者になると市場は期待している。"
+            },
+            {
+                icon: Zap,
+                title: "デザインの「OS」化",
+                description: "単なるツールではなく、製品開発全体のハブ（OS）となることで、不可欠な存在になる可能性を秘めている。"
+            },
+            {
+                icon: Bot,
+                title: "AI戦略への高い期待",
+                description: "AIによるデザインプロセスの自動化・最適化は、将来の爆発的な成長ドライバーとして期待されている。"
+            }
+        ];
+
+
+        // --- コンポーネント ---
+
+        const StatCard = ({ icon, title, value, subValue, colorClass }) => (
+          <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 flex flex-col justify-between h-full">
+            <div className="flex items-center text-gray-400 mb-2">
+              {icon}
+              <span className="ml-2 text-sm">{title}</span>
+            </div>
+            <div>
+              <p className={`text-3xl font-bold ${colorClass}`}>{value}</p>
+              {subValue && <p className="text-gray-500 text-sm">{subValue}</p>}
+            </div>
+          </div>
+        );
+
+        const IPOChart = () => {
+            const priceChange = ((figmaData.firstDayClose - figmaData.ipoPrice) / figmaData.ipoPrice) * 100;
+            return (
+                <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 h-full flex flex-col">
+                    <h3 className="text-lg font-semibold text-white mb-4">IPO株価パフォーマンス</h3>
+                    <div className="flex-grow flex flex-col justify-center items-center">
+                        <div className="w-full flex justify-between items-end h-32">
+                            <div className="text-center">
+                                <div className="h-8 w-12 bg-blue-500 rounded-t-md"></div>
+                                <p className="text-sm font-bold text-white mt-2">${figmaData.ipoPrice.toFixed(2)}</p>
+                                <p className="text-xs text-gray-400">公開価格</p>
+                            </div>
+                            <div className="flex-grow border-b-2 border-dashed border-pink-500/50 relative -bottom-4 mx-2">
+                                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-2 py-1 text-xs rounded-md font-bold">
+                                    +{priceChange.toFixed(0)}%
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <div className="h-32 w-12 bg-pink-500 rounded-t-md"></div>
+                                <p className="text-sm font-bold text-white mt-2">${figmaData.firstDayClose.toFixed(2)}</p>
+                                <p className="text-xs text-gray-400">初日終値</p>
+                            </div>
+                        </div>
+                         <p className="text-xs text-gray-500 mt-4 text-center">
+                            公開価格から初日終値にかけて株価は劇的に上昇しました。
+                        </p>
+                    </div>
+                </div>
+            );
+        };
+
+
+        const TimelineItem = ({ event, isLast }) => (
+          <div className="flex items-start">
+            <div className="flex flex-col items-center mr-4">
+              <div className={`w-10 h-10 rounded-full ${event.color} bg-opacity-10 flex items-center justify-center`}>
+                <event.icon className={`w-5 h-5 ${event.color}`} />
+              </div>
+              {!isLast && <div className="w-px h-24 bg-gray-700"></div>}
+            </div>
+            <div className="pt-1">
+              <p className="text-sm text-gray-400">{event.date}</p>
+              <h4 className="font-semibold text-white">{event.title}</h4>
+              <p className="text-sm text-gray-300 mt-1">{event.description}</p>
+            </div>
+          </div>
+        );
+
+
+        const ComparisonChart = () => {
+          const maxPsr = Math.max(...competitors.map(c => c.psr));
+
+          return (
+            <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-lg font-semibold text-white mb-1">PSR (株価売上高倍率) 比較</h3>
+              <p className="text-sm text-gray-400 mb-6">PSRは企業の成長期待を反映します。Figmaの数値が突出していることがわかります。</p>
+              <div className="space-y-4">
+                {competitors.map(company => (
+                  <div key={company.name} className="flex items-center">
+                    <p className="w-28 text-sm text-gray-300 font-medium">{company.name}</p>
+                    <div className="flex-grow bg-gray-700 rounded-full h-6 mr-4">
+                      <div
+                        className={`${company.color} h-6 rounded-full flex items-center justify-end pr-2`}
+                        style={{ width: `${(company.psr / maxPsr) * 100}%` }}
+                      >
+                      </div>
+                    </div>
+                     <p className={`w-16 text-right font-bold ${company.name === 'Figma' ? 'text-pink-400' : 'text-white'}`}>{company.psr.toFixed(1)}倍</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        };
+
+        const CompetitorTable = () => (
+            <div className="bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-700 mt-6">
+                <h3 className="text-lg font-semibold text-white mb-4">主要テック企業データ比較</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                        <thead className="border-b border-gray-700 text-gray-400">
+                            <tr>
+                                <th className="p-2">企業名</th>
+                                <th className="p-2 text-right">時価総額(億ドル)</th>
+                                <th className="p-2 text-right">年間収益(億ドル)</th>
+                                <th className="p-2 text-right">PSR(倍)</th>
+                                <th className="p-2 text-right">収益成長率(%)</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-white">
+                            {competitors.map(c => (
+                                <tr key={c.name} className={`border-b border-gray-800 ${c.name === 'Figma' ? 'bg-pink-500/10' : ''}`}>
+                                    <td className={`p-2 font-semibold ${c.name === 'Figma' ? 'text-pink-400' : ''}`}>{c.name}</td>
+                                    <td className="p-2 text-right">{c.marketCap.toLocaleString()}</td>
+                                    <td className="p-2 text-right">{c.revenue.toLocaleString()}</td>
+                                    <td className="p-2 text-right font-bold">{c.psr.toFixed(1)}</td>
+                                    <td className="p-2 text-right font-bold">{c.growth.toFixed(1)}%</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+
+
+        const App = () => {
+          return (
+            <div className="bg-gray-900 text-white min-h-screen font-sans p-4 sm:p-8">
+              <div className="max-w-7xl mx-auto">
+                
+                <header className="text-center mb-12">
+                  <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">Figma: IPO & Tech Stock Analysis</h1>
+                  <p className="text-gray-400 mt-2 text-lg">Adobeとの破談を乗り越え、市場の期待を背負うデザイン巨人の今</p>
+                </header>
+
+                <section className="mb-12">
+                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center"><Landmark />IPOハイライト</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <StatCard icon={<Target />} title="公開価格" value={`$${figmaData.ipoPrice.toFixed(2)}`} colorClass="text-blue-400" />
+                    <StatCard icon={<TrendingUp />} title="初日終値" value={`$${figmaData.firstDayClose.toFixed(2)}`} subValue={`+${(((figmaData.firstDayClose - figmaData.ipoPrice) / figmaData.ipoPrice) * 100).toFixed(0)}%`} colorClass="text-pink-400" />
+                    <StatCard icon={<Scale />} title="時価総額 (2025/8/4)" value={`$${figmaData.marketCap}`} subValue="億ドル" colorClass="text-green-400" />
+                    <div className="lg:col-span-2">
+                      <IPOChart />
+                    </div>
+                  </div>
+                </section>
+
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center"><Milestone />Adobeとの経緯：破談から飛躍へ</h2>
+                    <div className="bg-gray-800 p-6 sm:p-8 rounded-xl border border-gray-700">
+                        {timelineEvents.map((event, index) => (
+                            <TimelineItem key={index} event={event} isLast={index === timelineEvents.length - 1} />
+                        ))}
+                    </div>
+                </section>
+
+                <section className="mb-12">
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center"><BarChart2 />競合との比較</h2>
+                    <ComparisonChart />
+                    <CompetitorTable />
+                </section>
+                
+                <section>
+                    <h2 className="text-2xl font-bold text-white mb-6 flex items-center"><Star />市場が高い評価をする理由 (Key Insights)</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {insights.map((insight, index) => (
+                            <div key={index} className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                                <div className="flex items-center mb-3">
+                                    <div className="bg-green-500/10 p-2 rounded-full">
+                                        <insight.icon className="w-6 h-6 text-green-400" />
+                                    </div>
+                                </div>
+                                <h3 className="text-lg font-semibold text-white mb-2">{insight.title}</h3>
+                                <p className="text-gray-300 text-sm">{insight.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <footer className="text-center mt-16 text-gray-500 text-xs">
+                  <p>データは2025年8月時点の公開情報に基づきます。本資料は投資を推奨するものではありません。</p>
+                </footer>
+
+              </div>
+            </div>
+          );
+        };
+        
+        // Reactアプリを #root に描画
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
