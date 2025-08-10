@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma 構造とプラン比較の統合アプリ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+
+  <!-- Figma 階層構造セクション -->
+  <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12 mb-12">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 mb-6 tracking-tight leading-tight">
+      Figmaの階層構造
+    </h2>
+    <p class="text-center text-gray-600 mb-10 text-lg">
+      Figmaの組織とファイルの関係性をビジュアルで表現しました。
+    </p>
+    <div id="structure-container" class="flex justify-center"></div>
+  </div>
+
+  <!-- Figma プランと階層構造の比較セクション -->
+  <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-900 mb-6 tracking-tight leading-tight">
+      Figma プランと階層構造の比較
+    </h2>
+    <p class="text-center text-gray-600 mb-8 text-lg">
+      プランを選択して、利用できる機能の違いを確認してみましょう。
+    </p>
+    <div class="flex justify-center mb-10">
+      <div class="inline-flex rounded-full shadow-lg bg-gray-100 p-2 space-x-2">
+        <button id="btn-starter" class="py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 bg-indigo-600 text-white shadow">
+          Starter (無料)
+        </button>
+        <button id="btn-professional" class="py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 bg-transparent text-gray-800 hover:bg-gray-200">
+          Professional
+        </button>
+        <button id="btn-organization" class="py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 bg-transparent text-gray-800 hover:bg-gray-200">
+          Organization
+        </button>
+      </div>
+    </div>
+    <div id="plan-container" class="flex justify-center"></div>
+  </div>
+
+  <script>
+    // Lucide Icons (inline SVG)
+    const icons = {
+      users: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+      folder: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>`,
+      fileText: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-white"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`,
+      arrowRight: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 font-bold text-lg"><polyline points="9 18 15 12 9 6"/></svg>`
+    };
+
+    // Figmaの構造データ
+    const figmaStructureData = {
+      account: {
+        name: "私のFigmaアカウント",
+        icon: icons.users,
+        description: "Figmaを利用する個人または組織のユーザーアカウントです。",
+        color: "bg-blue-600",
+        children: [
+          {
+            name: "チーム (Team)",
+            icon: icons.folder,
+            description: "特定の組織や部署で作成する、作業の最も大きな単位です。メンバーの管理やライブラリの共有を行います。",
+            color: "bg-teal-600",
+            children: [
+              {
+                name: "プロジェクト (Project)",
+                icon: icons.folder,
+                description: "特定のプロジェクトやクライアントごとに作成するフォルダーです。",
+                color: "bg-purple-600",
+                children: [
+                  {
+                    name: "ファイル (File)",
+                    icon: icons.fileText,
+                    description: "実際のデザイン作業を行う場所です。ページを複数作成できます。",
+                    color: "bg-orange-500"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: "下書き (Drafts)",
+            icon: icons.fileText,
+            description: "チームやプロジェクトに属さない、個人用の作業スペースです。自由にファイルを無制限に作成できます。",
+            color: "bg-gray-500",
+          }
+        ]
+      }
+    };
+
+    // Figmaのプラン比較データ
+    const figmaPlanData = {
+      account: {
+        name: "私のFigmaアカウント",
+        icon: icons.users,
+        description: "Figmaを利用する個人または組織のユーザーアカウントです。",
+        color: "bg-blue-600",
+        children: [
+          {
+            name: "チーム (Team)",
+            icon: icons.folder,
+            description: {
+              starter: "共同編集者は最大1人まで。チームライブラリは利用できません。",
+              professional: "チーム数1つ。メンバー数無制限。チームライブラリを利用できます。",
+              organization: "複数のチームを作成・管理可能。組織全体のデザインシステムを共有できます。",
+            },
+            color: "bg-teal-600",
+            children: [
+              {
+                name: "プロジェクト (Project)",
+                icon: icons.folder,
+                description: {
+                  starter: "共同編集可能なプロジェクトは最大3つまで。",
+                  professional: "プロジェクト数に制限はありません。",
+                  organization: "プロジェクト数に制限はありません。一元管理が可能です。",
+                },
+                color: "bg-purple-600",
+                children: [
+                  {
+                    name: "ファイル (File)",
+                    icon: icons.fileText,
+                    description: {
+                      starter: "チーム内で共同編集できるファイルは最大3つまで。バージョン履歴は30日間。",
+                      professional: "ファイル数に制限はありません。バージョン履歴は無制限。",
+                      organization: "ファイル数に制限はありません。バージョン履歴は無制限。より高度なセキュリティ機能を利用できます。",
+                    },
+                    color: "bg-orange-500"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            name: "下書き (Drafts)",
+            icon: icons.fileText,
+            description: {
+              all: "どのプランでも、個人用の作業スペースです。ファイル数に制限はありません。",
+            },
+            color: "bg-gray-500",
+          }
+        ]
+      }
+    };
+
+    // 階層構造ノードを再帰的に生成する関数
+    function renderStructureNode(node) {
+      const container = document.createElement('div');
+      container.className = 'flex flex-col ml-6';
+      
+      const header = document.createElement('div');
+      header.className = 'flex items-center space-x-2 cursor-pointer';
+      
+      let isOpen = true;
+      const hasChildren = node.children && node.children.length > 0;
+
+      if (hasChildren) {
+        const arrow = document.createElement('div');
+        arrow.innerHTML = icons.arrowRight;
+        arrow.className = 'text-gray-500 font-bold text-lg transition-transform duration-200';
+        header.appendChild(arrow);
+        header.onclick = () => {
+          isOpen = !isOpen;
+          if (isOpen) {
+            childContainer.classList.remove('hidden');
+            arrow.style.transform = 'rotate(90deg)';
+          } else {
+            childContainer.classList.add('hidden');
+            arrow.style.transform = 'rotate(0deg)';
+          }
+        };
+        arrow.style.transform = 'rotate(90deg)';
+      }
+
+      const iconDiv = document.createElement('div');
+      iconDiv.className = `p-2 rounded-lg flex items-center justify-center shadow-lg ${node.color} transition-all duration-300 transform hover:scale-105`;
+      iconDiv.innerHTML = node.icon;
+      
+      const textDiv = document.createElement('div');
+      textDiv.className = 'flex flex-col';
+      textDiv.innerHTML = `<span class="font-bold text-gray-800">${node.name}</span><p class="text-sm text-gray-600">${node.description}</p>`;
+
+      header.appendChild(iconDiv);
+      header.appendChild(textDiv);
+      container.appendChild(header);
+
+      if (hasChildren) {
+        const childContainer = document.createElement('div');
+        childContainer.className = 'overflow-hidden';
+        node.children.forEach(child => childContainer.appendChild(renderStructureNode(child)));
+        container.appendChild(childContainer);
+      }
+
+      return container;
+    }
+
+    // プラン比較ノードを再帰的に生成する関数
+    function renderPlanNode(node, plan, isHighlighted) {
+      const container = document.createElement('div');
+      container.className = 'flex flex-col ml-6';
+      
+      const header = document.createElement('div');
+      header.className = 'flex items-center space-x-2 cursor-pointer';
+
+      let isOpen = true;
+      const hasChildren = node.children && node.children.length > 0;
+
+      if (hasChildren) {
+        const arrow = document.createElement('div');
+        arrow.innerHTML = icons.arrowRight;
+        arrow.className = 'text-gray-500 font-bold text-lg transition-transform duration-200';
+        header.appendChild(arrow);
+        header.onclick = () => {
+          isOpen = !isOpen;
+          if (isOpen) {
+            childContainer.classList.remove('hidden');
+            arrow.style.transform = 'rotate(90deg)';
+          } else {
+            childContainer.classList.add('hidden');
+            arrow.style.transform = 'rotate(0deg)';
+          }
+        };
+        arrow.style.transform = 'rotate(90deg)';
+      }
+      
+      const iconDiv = document.createElement('div');
+      const highlightClass = isHighlighted ? `ring-4 ring-offset-2 ring-indigo-500` : '';
+      iconDiv.className = `p-2 rounded-lg flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-105 ${node.color} ${highlightClass}`;
+      iconDiv.innerHTML = node.icon;
+      
+      const currentDescription = node.description[plan] || node.description.all;
+      const textDiv = document.createElement('div');
+      textDiv.className = 'flex flex-col';
+      textDiv.innerHTML = `<span class="font-bold text-gray-800">${node.name}</span><p class="text-sm text-gray-600">${currentDescription}</p>`;
+
+      header.appendChild(iconDiv);
+      header.appendChild(textDiv);
+      container.appendChild(header);
+
+      if (hasChildren) {
+        const childContainer = document.createElement('div');
+        childContainer.className = 'overflow-hidden';
+        node.children.forEach(child => childContainer.appendChild(renderPlanNode(child, plan, isHighlighted)));
+        container.appendChild(childContainer);
+      }
+
+      return container;
+    }
+
+    // ボタンのイベントリスナー設定と初期描画
+    const btnStarter = document.getElementById('btn-starter');
+    const btnProfessional = document.getElementById('btn-professional');
+    const btnOrganization = document.getElementById('btn-organization');
+    const planContainer = document.getElementById('plan-container');
+
+    function updatePlanView(plan) {
+      planContainer.innerHTML = '';
+      planContainer.appendChild(renderPlanNode(figmaPlanData.account, plan, true));
+      
+      btnStarter.className = 'py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 ' + (plan === 'starter' ? 'bg-indigo-600 text-white shadow' : 'bg-transparent text-gray-800 hover:bg-gray-200');
+      btnProfessional.className = 'py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 ' + (plan === 'professional' ? 'bg-indigo-600 text-white shadow' : 'bg-transparent text-gray-800 hover:bg-gray-200');
+      btnOrganization.className = 'py-2 px-4 rounded-full text-sm font-medium transition-colors duration-300 ' + (plan === 'organization' ? 'bg-indigo-600 text-white shadow' : 'bg-transparent text-gray-800 hover:bg-gray-200');
+    }
+
+    btnStarter.addEventListener('click', () => updatePlanView('starter'));
+    btnProfessional.addEventListener('click', () => updatePlanView('professional'));
+    btnOrganization.addEventListener('click', () => updatePlanView('organization'));
+
+    // 初期描画
+    window.onload = function() {
+      const structureContainer = document.getElementById('structure-container');
+      structureContainer.appendChild(renderStructureNode(figmaStructureData.account));
+      updatePlanView('starter');
+    };
+  </script>
+
+</body>
+</html>
