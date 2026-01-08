@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竜馬がゆく：日本の夜明け</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- 
+    PALETTE: "Sunrise over the Pacific"
+    Primary: #0369a1 (Sky 700)
+    Secondary: #0c4a6e (Sky 900)
+    Accent: #f97316 (Orange 500)
+    Background: #f0f9ff (Sky 50)
+    Surface: #ffffff
+    Text: #334155 (Slate 700)
+    -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f9ff;
+            color: #334155;
+        }
+        
+        /* Chart Container Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width constraint */
+            height: 350px;    /* Base height */
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Flowchart Connector Styles (Pure CSS, NO SVG) */
+        .flow-step {
+            position: relative;
+        }
+        .flow-arrow::after {
+            content: '▼';
+            font-size: 1.5rem;
+            color: #0369a1;
+            display: block;
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+        @media (min-width: 768px) {
+            .flow-arrow::after {
+                content: '➤';
+                position: absolute;
+                top: 50%;
+                right: -1.5rem;
+                transform: translateY(-50%);
+                margin: 0;
+            }
+            .flow-arrow:last-child::after {
+                content: '';
+            }
+        }
+
+        /* Card Hover Effects */
+        .info-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+    
+    <!-- 
+    SOURCE MATERIAL ANALYSIS & PLAN:
+    1. Theme: "The Architect of Modern Japan".
+    2. Narrative: 
+       - Intro: Who is Ryoma?
+       - Characters: Compare the key players (Ryoma, Saigo, Katsura, Nakaoka).
+       - The Strategy: How the Alliance was formed (Rice/Guns trade).
+       - The Climax: Senchu Hassaku and Taisei Hokan.
+    3. Visualizations:
+       - Radar Chart: Character stats (Vision vs Combat).
+       - Bar Chart: The Economic basis of the Alliance.
+       - HTML Flowchart: The process of Taisei Hokan.
+    4. Constraint Check: NO SVG used. NO Mermaid used. All charts wrapped.
+    -->
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-sky-900 to-sky-700 text-white py-12 px-4 shadow-lg">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">竜馬がゆく</h1>
+            <p class="text-xl md:text-2xl text-sky-100 font-light">
+                剣ではなく、<span class="font-bold text-orange-400">「ビジョン」</span>で日本を変えた男の物語
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <span class="px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">司馬遼太郎 原作</span>
+                <span class="px-4 py-2 bg-orange-500 rounded-full font-bold shadow-md">完全解説</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-20">
+
+        <!-- SECTION 1: INTRODUCTION -->
+        <section>
+            <div class="bg-white rounded-2xl shadow-md p-8 border-l-8 border-sky-600">
+                <h2 class="text-3xl font-bold text-sky-900 mb-4">幕末の奇跡：無血革命への道</h2>
+                <p class="text-lg leading-relaxed text-slate-600">
+                    『竜馬がゆく』は、土佐の郷士・坂本竜馬が、旧態依然とした幕藩体制を打ち破り、近代国家「日本」の設計図を描くまでの壮大なドラマです。
+                    彼はなぜ、一介の脱藩浪士でありながら、薩摩・長州という巨大勢力を動かし、徳川幕府を終わらせることができたのでしょうか？
+                    その秘密は、彼の<span class="font-bold text-orange-500">「柔軟な思考」</span>と<span class="font-bold text-orange-500">「経済的視点」</span>にありました。
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CHARACTERS (RADAR CHART) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 md:order-1">
+                <div class="chart-container bg-white rounded-xl shadow-lg p-4 border border-slate-100">
+                    <canvas id="heroRadarChart"></canvas>
+                </div>
+                <p class="text-center text-sm text-slate-400 mt-2">※小説内の描写に基づく能力・性格分析</p>
+            </div>
+            <div class="order-1 md:order-2">
+                <h3 class="text-2xl font-bold text-sky-800 mb-4 border-b-2 border-orange-400 inline-block">登場人物の「能力」比較</h3>
+                <p class="mb-4 text-slate-600">
+                    物語を彩る英雄たちは、それぞれ異なる「武器」を持っていました。竜馬は剣の達人でありながら、最大の武器は<strong>「構想力（ビジョン）」</strong>と<strong>「交渉力」</strong>でした。
+                </p>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-2">🐉</span>
+                        <div>
+                            <strong class="text-sky-700">坂本竜馬</strong>
+                            <p class="text-sm">「私」がない。利益よりも未来を語ることで人を動かす天才。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-2">🐻</span>
+                        <div>
+                            <strong class="text-sky-700">西郷隆盛</strong>
+                            <p class="text-sm">圧倒的なカリスマと包容力。情に厚いが、政治的決断は冷徹。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-2">🐯</span>
+                        <div>
+                            <strong class="text-sky-700">桂小五郎</strong>
+                            <p class="text-sm">慎重居士。組織を守るため、石橋を叩いて渡るリアリスト。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE ALLIANCE (BAR CHART) -->
+        <section>
+            <div class="text-center mb-10">
+                <h3 class="text-3xl font-bold text-sky-900">不可能を可能にした「実利」の交換</h3>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto mt-2">
+                    犬猿の仲だった薩摩と長州。竜馬は「感情」ではなく「不足している物資」に目をつけ、商社（亀山社中）としての機能を使って同盟を成立させました。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Explainer Card -->
+                <div class="bg-orange-50 rounded-xl p-6 shadow-sm border border-orange-100 md:col-span-1">
+                    <h4 class="text-xl font-bold text-orange-600 mb-3">竜馬のソリューション</h4>
+                    <p class="text-sm leading-relaxed mb-4">
+                        長州は幕府と戦うための<strong>「最新兵器」</strong>が欲しいが、幕府に封鎖されて買えない。
+                        一方、薩摩は兵糧となる<strong>「米」</strong>が不足している。
+                    </p>
+                    <div class="bg-white p-4 rounded-lg text-center font-bold text-sky-800 shadow-inner">
+                        薩摩名義で武器を買い、<br>長州の米と交換する
+                    </div>
+                    <div class="text-center text-3xl my-2">⬇</div>
+                    <p class="text-center font-bold text-orange-600">薩長同盟の成立</p>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="md:col-span-2 bg-white rounded-xl shadow-lg p-6 border border-slate-100">
+                    <h4 class="text-lg font-semibold text-slate-700 mb-4 text-center">両藩の「需要」と「供給」のマッチング</h4>
+                    <div class="chart-container h-80">
+                        <canvas id="tradeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: THE GRAND PLAN (HTML FLOWCHART) -->
+        <section class="bg-sky-50 rounded-3xl p-8 md:p-12">
+            <h3 class="text-3xl font-bold text-center text-sky-900 mb-8">船中八策と大政奉還へのプロセス</h3>
+            <p class="text-center text-slate-600 mb-12 max-w-3xl mx-auto">
+                武力倒幕に傾く薩長を抑えつつ、幕府を「平和的」に解体する。竜馬が船の中で考案したウルトラC「船中八策」は、どのように実行されたのか？
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-stretch text-center">
+                <!-- Step 1 -->
+                <div class="flow-step flow-arrow bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500">
+                    <div class="text-4xl mb-3">🚢</div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">船中八策の立案</h4>
+                    <p class="text-xs text-slate-500">夕顔丸の船上にて</p>
+                    <hr class="my-3 border-slate-100">
+                    <p class="text-sm font-semibold text-sky-600">「政権を朝廷に返す」</p>
+                    <p class="text-sm text-slate-600 mt-1">新国家のグランドデザインを作成</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flow-step flow-arrow bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-500">
+                    <div class="text-4xl mb-3">📜</div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">土佐藩の説得</h4>
+                    <p class="text-xs text-slate-500">後藤象二郎・山内容堂</p>
+                    <hr class="my-3 border-slate-100">
+                    <p class="text-sm font-semibold text-indigo-600">「建白書」の提出</p>
+                    <p class="text-sm text-slate-600 mt-1">土佐藩の公論として幕府へ提案</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flow-step flow-arrow bg-white p-6 rounded-xl shadow-md border-t-4 border-purple-500">
+                    <div class="text-4xl mb-3">🏯</div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">将軍・慶喜の決断</h4>
+                    <p class="text-xs text-slate-500">二条城にて</p>
+                    <hr class="my-3 border-slate-100">
+                    <p class="text-sm font-semibold text-purple-600">「大政奉還」</p>
+                    <p class="text-sm text-slate-600 mt-1">内戦を回避し、徳川家の存続を図る</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flow-step bg-orange-100 p-6 rounded-xl shadow-md border-t-4 border-orange-500 transform scale-105 ring-4 ring-orange-200">
+                    <div class="text-4xl mb-3">🌅</div>
+                    <h4 class="font-bold text-lg text-slate-800 mb-2">明治維新</h4>
+                    <p class="text-xs text-slate-500">新しい日本の夜明け</p>
+                    <hr class="my-3 border-orange-200">
+                    <p class="text-sm font-bold text-orange-600">近代国家の誕生</p>
+                    <p class="text-sm text-slate-600 mt-1">身分制度の撤廃と四民平等へ</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: LEGACY (LIST) -->
+        <section class="max-w-4xl mx-auto">
+            <h3 class="text-2xl font-bold text-sky-800 mb-6 border-l-4 border-orange-500 pl-4">竜馬が遺したもの（船中八策の現代語訳）</h3>
+            <div class="bg-white rounded-lg shadow border border-slate-200 divide-y divide-slate-100">
+                <div class="p-4 flex items-center hover:bg-sky-50 transition-colors">
+                    <span class="bg-sky-100 text-sky-700 font-bold py-1 px-3 rounded-md mr-4 text-sm">第一条</span>
+                    <span class="text-slate-700 font-medium">天下の政権を朝廷に奉還せしむ（大政奉還）</span>
+                </div>
+                <div class="p-4 flex items-center hover:bg-sky-50 transition-colors">
+                    <span class="bg-sky-100 text-sky-700 font-bold py-1 px-3 rounded-md mr-4 text-sm">第二条</span>
+                    <span class="text-slate-700 font-medium">上下議政局を設け、議員を置く（議会政治の導入）</span>
+                </div>
+                <div class="p-4 flex items-center hover:bg-sky-50 transition-colors">
+                    <span class="bg-sky-100 text-sky-700 font-bold py-1 px-3 rounded-md mr-4 text-sm">第三条</span>
+                    <span class="text-slate-700 font-medium">有材の公卿諸侯及び天下の人材を顧問に備う（身分を問わない人材登用）</span>
+                </div>
+                <div class="p-4 flex items-center hover:bg-sky-50 transition-colors">
+                    <span class="bg-sky-100 text-sky-700 font-bold py-1 px-3 rounded-md mr-4 text-sm">第八条</span>
+                    <span class="text-slate-700 font-medium">金銀物価の法を定める（通貨・経済の安定）</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 py-8 text-center mt-12">
+        <p class="text-sm">Based on the novel "Ryoma ga Yuku" by Ryotaro Shiba</p>
+        <p class="text-xs mt-2 text-slate-500">Visualized for Clarity using Tailwind CSS & Chart.js</p>
+    </footer>
+
+    <script>
+        // --- HELPER FUNCTIONS ---
+        
+        // Label wrapping logic for Chart.js (handles Japanese text length)
+        function formatLabel(str, maxLen = 10) {
+            if (typeof str !== 'string') return str;
+            if (str.length <= maxLen) return str;
+            
+            const result = [];
+            let currentLine = '';
+            
+            // Simple split by length for Japanese text (no spaces usually)
+            for (let i = 0; i < str.length; i++) {
+                currentLine += str[i];
+                if (currentLine.length >= maxLen) {
+                    result.push(currentLine);
+                    currentLine = '';
+                }
+            }
+            if (currentLine) result.push(currentLine);
+            return result;
+        }
+
+        // Shared Tooltip Config (Mandatory)
+        const commonTooltipOptions = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(''); // Join without space for Japanese
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            backgroundColor: 'rgba(15, 23, 42, 0.9)', // Slate 900
+            titleFont: { family: 'Noto Sans JP', size: 14 },
+            bodyFont: { family: 'Noto Sans JP', size: 13 },
+            padding: 10,
+            cornerRadius: 8
+        };
+
+        // --- CHART 1: HERO RADAR CHART ---
+        const ctxRadar = document.getElementById('heroRadarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: [
+                    formatLabel('先見性 (Vision)'),
+                    formatLabel('交渉力 (Negotiation)'),
+                    formatLabel('剣術・武力 (Combat)'),
+                    formatLabel('政治的慎重さ (Caution)'),
+                    formatLabel('組織力 (Organization)')
+                ],
+                datasets: [
+                    {
+                        label: '坂本竜馬',
+                        data: [10, 10, 9, 5, 7],
+                        backgroundColor: 'rgba(14, 165, 233, 0.2)', // Sky 500
+                        borderColor: '#0ea5e9',
+                        pointBackgroundColor: '#0ea5e9',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '西郷隆盛',
+                        data: [7, 6, 9, 7, 10],
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)', // Orange 500
+                        borderColor: '#f97316',
+                        pointBackgroundColor: '#f97316',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '桂小五郎',
+                        data: [8, 7, 10, 10, 8],
+                        backgroundColor: 'rgba(100, 116, 139, 0.2)', // Slate 500
+                        borderColor: '#64748b',
+                        pointBackgroundColor: '#64748b',
+                        borderWidth: 2,
+                        hidden: true // Hide initially to keep chart clean
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { family: 'Noto Sans JP', size: 12, weight: 'bold' },
+                            color: '#475569'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    tooltip: commonTooltipOptions,
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: 'Noto Sans JP' }, usePointStyle: true }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: TRADE BAR CHART ---
+        const ctxTrade = document.getElementById('tradeChart').getContext('2d');
+        new Chart(ctxTrade, {
+            type: 'bar',
+            data: {
+                labels: [
+                    formatLabel('薩摩藩 (Satsuma)'),
+                    formatLabel('長州藩 (Choshu)')
+                ],
+                datasets: [
+                    {
+                        label: '所有している (Haves)',
+                        data: [90, 20], // Satsuma has Rice, Choshu has little rice
+                        backgroundColor: '#0ea5e9', // Sky 500
+                        stack: 'Stack 0',
+                    },
+                    {
+                        label: '不足・欲している (Needs)',
+                        data: [-80, -90], // Satsuma needs Guns, Choshu needs Guns/Rice
+                        backgroundColor: '#f97316', // Orange 500
+                        stack: 'Stack 0',
+                    },
+                    {
+                        label: '軍事意欲 (Morale)',
+                        data: [70, 100], 
+                        backgroundColor: '#cbd5e1', // Slate 300
+                        stack: 'Stack 1',
+                        hidden: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y', // Horizontal Bar for better comparison
+                scales: {
+                    x: {
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: function(val) {
+                                return Math.abs(val) > 0 ? (val > 0 ? '余剰' : '不足') : 0;
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        ...commonTooltipOptions,
+                        callbacks: {
+                            title: commonTooltipOptions.callbacks.title,
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let value = context.parsed.x;
+                                let item = context.dataIndex === 0 ? (value > 0 ? '米 (Rice)' : '武器 (Guns)') : (value > 0 ? '闘志' : '武器 & 米');
+                                return `${label}: ${item} レベル`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { family: 'Noto Sans JP' } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
