@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竜馬がゆく：ビジュアル・インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-indigo: #4338ca;
+            --font-main: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin: auto;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(rgba(30, 27, 75, 0.8), rgba(67, 56, 202, 0.8)), 
+                        url('https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .portrait-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            aspect-ratio: 3/4;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- ヘッダー -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold text-xl">竜</div>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight">竜馬がゆく：幕末の群像</h1>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-500">
+                <a href="#vision" class="hover:text-indigo-600">志</a>
+                <a href="#characters" class="hover:text-indigo-600">登場人物</a>
+                <a href="#strategy" class="hover:text-indigo-600">戦略</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-6 py-10 space-y-20">
+
+        <!-- ヒーローセクション -->
+        <section id="vision" class="hero-gradient rounded-3xl overflow-hidden shadow-2xl relative text-white">
+            <div class="p-10 md:p-20 text-center relative z-10">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-32 h-40 portrait-frame bg-slate-200 text-slate-400">
+                        
+                    </div>
+                </div>
+                <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+                    「日本を今一度、<br class="hidden md:block">せんたくいたし申候」
+                </h2>
+                <p class="text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto leading-relaxed font-light">
+                    一介の素浪人から、日本を近代国家へと導くプロデューサーへ。司馬遼太郎が描いた坂本竜馬の、疾風怒濤の生涯。
+                </p>
+            </div>
+        </section>
+
+        <!-- セクション 1: 登場人物の群像 -->
+        <section id="characters" class="space-y-12">
+            <div class="text-center">
+                <h3 class="text-3xl font-bold text-slate-800 italic">幕末のプロデューサーと主役たち</h3>
+                <p class="text-slate-500 mt-2">竜馬が繋いだ、時代を創る個性の激突</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 坂本 竜馬 -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-indigo-50 text-indigo-300">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-indigo-900">坂本 竜馬</h4>
+                        <p class="text-xs font-bold text-indigo-500 uppercase tracking-widest">土佐脱藩浪士 / 海援隊長</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            「自由」を愛し、藩という枠を越えて日本を一つの会社として捉えた。薩長同盟、大政奉還の立役者。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 勝 海舟 -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-slate-100 text-slate-400">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-slate-800">勝 海舟</h4>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">幕臣 / 竜馬の師</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            竜馬に世界情勢と海軍の重要性を説いた。幕府側でありながら、日本の未来を憂いた巨頭。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 西郷 隆盛 -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-blue-50 text-blue-300">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-blue-900">西郷 隆盛</h4>
+                        <p class="text-xs font-bold text-blue-500 uppercase tracking-widest">薩摩藩士</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            「大鐘」と評された包容力を持つ。竜馬の真心に触れ、仇敵だった長州との同盟に踏み切る。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 桂 小五郎 -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-red-50 text-red-300">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-red-900">桂 小五郎</h4>
+                        <p class="text-xs font-bold text-red-500 uppercase tracking-widest">長州藩士</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            後の木戸孝允。長州の誇りと存亡を背負い、竜馬の提案した「実利」による同盟を受け入れた。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 徳川 慶喜 -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-yellow-50 text-yellow-300">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-yellow-900">徳川 慶喜</h4>
+                        <p class="text-xs font-bold text-yellow-600 uppercase tracking-widest">江戸幕府 第15代将軍</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            天才的な知略の持ち主。土佐藩の建白を受け、自ら政権を返上する「大政奉還」を断行した。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- トーマス・グラバー -->
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 card-hover">
+                    <div class="portrait-frame mb-6 bg-emerald-50 text-emerald-300">
+                        
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-2xl font-black text-emerald-900">グラバー</h4>
+                        <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">英国商人</p>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            長崎を拠点に最新兵器を供給。竜馬のビジネスパートナーであり、維新の影の立役者。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- セクション 2: データの可視化 -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-xl font-bold mb-8 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-indigo-600 rounded-full"></span>
+                    志士たちの資質比較
+                </h3>
+                <div class="chart-container">
+                    <canvas id="charStatsRadar"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-xl font-bold mb-8 flex items-center gap-2">
+                    <span class="w-2 h-6 bg-red-600 rounded-full"></span>
+                    幕末の勢力推移（概念図）
+                </h3>
+                <div class="chart-container">
+                    <canvas id="powerBalanceLine"></canvas>
+                </div>
+                <p class="text-xs text-slate-400 mt-6 italic text-center">
+                    ※黒船来航から大政奉還までの相対的な勢力変化
+                </p>
+            </div>
+        </section>
+
+        <!-- セクション 3: 船中八策 -->
+        <section id="strategy" class="bg-indigo-900 rounded-3xl p-8 md:p-16 text-white overflow-hidden relative">
+            <div class="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
+                <div class="text-[120px] font-black">策</div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto relative z-10">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-yellow-400">新国家の設計図：船中八策</h3>
+                    <p class="text-indigo-200 mt-4">夕顔丸の船上で描かれた、日本の未来</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white/10 p-6 rounded-xl border border-white/20">
+                        <h4 class="font-bold text-yellow-200 mb-2">一、大政奉還</h4>
+                        <p class="text-sm text-indigo-50">政権を朝廷に帰し、政令を朝廷より出すこと。</p>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-xl border border-white/20">
+                        <h4 class="font-bold text-yellow-200 mb-2">二、上下議政局</h4>
+                        <p class="text-sm text-indigo-50">上下議院を設置し、議員を置いて公議を尽くすこと。</p>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-xl border border-white/20">
+                        <h4 class="font-bold text-yellow-200 mb-2">三、人材登用</h4>
+                        <p class="text-sm text-indigo-50">広く有能な人材を登用し、旧来の腐朽した職制を廃すること。</p>
+                    </div>
+                    <div class="bg-white/10 p-6 rounded-xl border border-white/20">
+                        <h4 class="font-bold text-yellow-200 mb-2">四、条約改正</h4>
+                        <p class="text-sm text-indigo-50">外国との交際を広く議し、新たに適正な条約を結ぶこと。</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 text-center italic text-indigo-300">
+                    「この策を慶喜公が受け入れねば、私は腹を斬る」― 竜馬の覚悟
+                </div>
+            </div>
+        </section>
+
+        <!-- 総括 -->
+        <section class="text-center max-w-2xl mx-auto pb-10">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 underline decoration-yellow-400 decoration-4">時代を動かすのは「個」の意志</h3>
+            <p class="text-slate-600 leading-relaxed font-serif text-lg">
+                竜馬がゆく道の先には、常に「新しい日本」がありました。<br>
+                彼が残した最大の遺産は、制度ではなく、「不可能を可能にする」という不屈の精神かもしれません。
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-12 text-center text-slate-400">
+        <p class="text-sm">Based on "Ryoma ga Yuku" by Ryotaro Shiba</p>
+        <p class="text-xs mt-2">Visualized by Gemini Immersive</p>
+    </footer>
+
+    <script>
+        Chart.defaults.font.family = "'Hiragino Kaku Gothic ProN', sans-serif";
+
+        // 1. レーダーチャート
+        const radarCtx = document.getElementById('charStatsRadar').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['柔軟性', '決断力', '大局観', 'カリスマ', '外交力'],
+                datasets: [
+                    {
+                        label: '坂本 竜馬',
+                        data: [100, 85, 95, 100, 95],
+                        borderColor: '#4338ca',
+                        backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                        borderWidth: 3
+                    },
+                    {
+                        label: '西郷 隆盛',
+                        data: [70, 100, 85, 95, 70],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: '徳川 慶喜',
+                        data: [60, 90, 90, 80, 85],
+                        borderColor: '#ca8a04',
+                        backgroundColor: 'rgba(202, 138, 4, 0.05)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    r: { beginAtZero: true, max: 100, ticks: { display: false } }
+                }
+            }
+        });
+
+        // 2. 勢力推移チャート
+        const lineCtx = document.getElementById('powerBalanceLine').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['黒船', '桜田門', '薩英戦争', '池田屋', '薩長同盟', '奉還'],
+                datasets: [
+                    {
+                        label: '幕府権威',
+                        data: [100, 80, 70, 75, 40, 10],
+                        borderColor: '#94a3b8',
+                        tension: 0.3,
+                        pointRadius: 4
+                    },
+                    {
+                        label: '倒幕勢力',
+                        data: [10, 30, 20, 15, 60, 100],
+                        borderColor: '#ef4444',
+                        tension: 0.3,
+                        pointRadius: 4
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { display: false } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
