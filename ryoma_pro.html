@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竜馬がゆく: 幕末の群像劇と大政奉還</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; height: 350px; max-height: 400px; }
+        .card { background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; border: 1px solid #E2E8F0; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+        .character-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; items-center: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem; border: 4px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .timeline-line { position: absolute; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: linear-gradient(to bottom, #1E3A8A, #F59E0B); z-index: 0; }
+        .timeline-dot { width: 16px; height: 16px; background-color: #F59E0B; border-radius: 50%; border: 3px solid #fff; z-index: 10; position: absolute; left: 50%; transform: translateX(-50%); }
+        @media (max-width: 768px) {
+            .timeline-line { left: 20px; }
+            .timeline-dot { left: 20px; }
+        }
+    </style>
+    <!-- 
+    PLAN SUMMARY:
+    1. Hero: Title and catchphrase.
+    2. Character Gallery: Enhanced with avatars (placeholders) for Ryoma, Katsu, Saigo, Katsura, and Oryo.
+    3. Radar Chart: Comparing their attributes.
+    4. Satcho Alliance: Visualizing the trade and the bridge Ryoma built.
+    5. Timeline: Key events.
+    6. Senchu Hassaku: The 8-point plan for modern Japan.
+    7. Conclusion: Legacy and final impact.
+    
+    CONFIRMATION:
+    - NO SVG used.
+    - NO Mermaid JS used.
+    - Icons are Unicode and Styled Divs.
+    -->
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <header class="bg-[#1E3A8A] text-white py-20 px-6 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#F59E0B 1px, transparent 1px); background-size: 20px 20px;"></div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tighter">竜馬がゆく</h1>
+            <p class="text-xl md:text-2xl font-light text-blue-100 mb-10">日本を今一度、せんたくいたし申候</p>
+            <div class="flex justify-center gap-4">
+                <span class="bg-blue-800/50 backdrop-blur px-4 py-1 rounded-full text-sm">司馬遼太郎 歴史小説</span>
+                <span class="bg-yellow-500 text-blue-900 font-bold px-4 py-1 rounded-full text-sm">大政奉還の設計者</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Character Gallery Section -->
+    <section class="max-w-6xl mx-auto py-16 px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-slate-800">物語を彩る主要人物</h2>
+            <p class="text-slate-500">個性溢れる志士たちの肖像</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <!-- Ryoma -->
+            <div class="card p-6 flex flex-col items-center text-center">
+                <div class="character-avatar bg-blue-600 text-white">🌊</div>
+                <h3 class="font-bold text-lg">坂本竜馬</h3>
+                <p class="text-xs text-blue-600 font-bold mb-2">主人公</p>
+                <p class="text-xs text-slate-500">北辰一刀流の達人。商人の魂を持つ革命家。</p>
+            </div>
+            <!-- Katsu -->
+            <div class="card p-6 flex flex-col items-center text-center">
+                <div class="character-avatar bg-slate-700 text-white">⚓</div>
+                <h3 class="font-bold text-lg">勝海舟</h3>
+                <p class="text-xs text-slate-600 font-bold mb-2">竜馬の師</p>
+                <p class="text-xs text-slate-500">幕府の開明派。竜馬に「海」と「世界」を教えた。</p>
+            </div>
+            <!-- Saigo -->
+            <div class="card p-6 flex flex-col items-center text-center">
+                <div class="character-avatar bg-orange-600 text-white">🐕</div>
+                <h3 class="font-bold text-lg">西郷隆盛</h3>
+                <p class="text-xs text-orange-600 font-bold mb-2">薩摩の巨星</p>
+                <p class="text-xs text-slate-500">圧倒的な徳と包容力を持つ。討幕の軍事指導者。</p>
+            </div>
+            <!-- Katsura -->
+            <div class="card p-6 flex flex-col items-center text-center">
+                <div class="character-avatar bg-emerald-600 text-white">⚔️</div>
+                <h3 class="font-bold text-lg">桂小五郎</h3>
+                <p class="text-xs text-emerald-600 font-bold mb-2">長州の知将</p>
+                <p class="text-xs text-slate-500">「逃げの小五郎」。藩の存亡を背負い苦闘する。</p>
+            </div>
+            <!-- Oryo -->
+            <div class="card p-6 flex flex-col items-center text-center">
+                <div class="character-avatar bg-pink-500 text-white">🌸</div>
+                <h3 class="font-bold text-lg">おりょう</h3>
+                <p class="text-xs text-pink-500 font-bold mb-2">運命の伴侶</p>
+                <p class="text-xs text-slate-500">寺田屋で竜馬の命を救った、気丈で美しい女性。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Radar Chart Comparison -->
+    <section class="max-w-6xl mx-auto py-12 px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="card p-8 bg-slate-900 text-white">
+            <h3 class="text-2xl font-bold mb-6">能力パラメータ分析</h3>
+            <div class="chart-container">
+                <canvas id="heroesChart"></canvas>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-4 text-xs">
+                <div class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>坂本竜馬</div>
+                <div class="flex items-center"><span class="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>西郷隆盛</div>
+                <div class="flex items-center"><span class="w-3 h-3 bg-emerald-500 rounded-full mr-2"></span>桂小五郎</div>
+            </div>
+        </div>
+        <div>
+            <h2 class="text-3xl font-bold mb-6">「人」が歴史を動かす</h2>
+            <p class="text-slate-600 leading-relaxed mb-6">
+                竜馬の凄さは、単体での武力ではなく、**「異なる強みを持つ他者を繋げる力」**にありました。西郷の政治力、桂の忠義、勝の知識。それらを「日本」という一つの目的のために編み上げたのが竜馬という存在です。
+            </p>
+            <div class="space-y-4">
+                <div class="flex items-center p-4 bg-white rounded-lg border">
+                    <span class="text-2xl mr-4">💡</span>
+                    <div>
+                        <h4 class="font-bold">先見性 (Vision)</h4>
+                        <p class="text-xs text-slate-500">藩という枠を捨て、世界の中の日本を見る目。</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 bg-white rounded-lg border">
+                    <span class="text-2xl mr-4">🤝</span>
+                    <div>
+                        <h4 class="font-bold">交渉力 (Negotiation)</h4>
+                        <p class="text-xs text-slate-500">「損して得取れ」の商人精神で敵対組織を結ぶ。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Satcho Alliance Section -->
+    <section class="bg-slate-50 py-16 px-6">
+        <div class="max-w-5xl mx-auto text-center mb-12">
+            <h2 class="text-3xl font-bold">薩長同盟：武器と米のリアリズム</h2>
+            <p class="text-slate-500 mt-2">感情を「商売」で乗り越えた瞬間</p>
+        </div>
+
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-center items-center gap-8">
+            <!-- Choshu Side -->
+            <div class="w-full md:w-1/3 card p-6 text-center border-t-4 border-emerald-500">
+                <span class="text-4xl">⚔️</span>
+                <h3 class="font-bold mt-2">長州藩</h3>
+                <p class="text-xs text-red-500 font-bold">深刻な武器不足</p>
+                <div class="mt-4 py-2 px-3 bg-emerald-50 rounded-full text-xs font-bold text-emerald-700">🍚 兵糧米を供給</div>
+            </div>
+
+            <!-- Bridge -->
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-blue-900 text-white rounded-full flex flex-col items-center justify-center shadow-lg border-4 border-white">
+                    <span class="text-xs">橋渡し</span>
+                    <span class="font-bold">竜馬</span>
+                </div>
+                <div class="h-10 w-1 bg-blue-900 opacity-20"></div>
+                <div class="text-xs font-bold text-blue-900 bg-white px-3 py-1 rounded-full border">亀山社中</div>
+            </div>
+
+            <!-- Satsuma Side -->
+            <div class="w-full md:w-1/3 card p-6 text-center border-t-4 border-orange-500">
+                <span class="text-4xl">🌋</span>
+                <h3 class="font-bold mt-2">薩摩藩</h3>
+                <p class="text-xs text-red-500 font-bold">深刻な食料不足</p>
+                <div class="mt-4 py-2 px-3 bg-orange-50 rounded-full text-xs font-bold text-orange-700">🔫 武器・艦船を名義貸し</div>
+            </div>
+        </div>
+        
+        <div class="mt-12 max-w-2xl mx-auto card p-6">
+            <h4 class="text-center font-bold mb-4">取引のバランス</h4>
+            <div class="chart-container" style="height: 200px;">
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="max-w-4xl mx-auto py-16 px-6">
+        <h2 class="text-3xl font-bold text-center mb-12">竜馬の短い、しかし濃密な生涯</h2>
+        <div class="relative">
+            <div class="timeline-line"></div>
+            
+            <!-- Item 1 -->
+            <div class="relative mb-12 flex flex-col md:flex-row items-center">
+                <div class="timeline-dot"></div>
+                <div class="md:w-1/2 md:pr-12 md:text-right">
+                    <span class="text-blue-600 font-bold">1835-1861</span>
+                    <h3 class="text-xl font-bold">土佐の泣き虫、江戸へ</h3>
+                    <p class="text-sm text-slate-500">郷士の次男として誕生。黒船来航により世界を意識し、土佐勤王党を経て脱藩。</p>
+                </div>
+                <div class="md:w-1/2 md:pl-12 mt-4 md:mt-0">
+                    <div class="bg-blue-50 p-3 rounded-lg text-2xl">🐢 泣き虫から剣豪へ</div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="relative mb-12 flex flex-col md:flex-row items-center">
+                <div class="timeline-dot"></div>
+                <div class="md:w-1/2 md:pr-12 md:order-1 text-left md:text-right hidden md:block">
+                    <div class="bg-slate-100 p-3 rounded-lg text-2xl">🚢 世界を学ぶ</div>
+                </div>
+                <div class="md:w-1/2 md:pl-12 md:order-2">
+                    <span class="text-blue-600 font-bold">1862-1864</span>
+                    <h3 class="text-xl font-bold">勝海舟への弟子入り</h3>
+                    <p class="text-sm text-slate-500">勝海舟を斬るつもりで訪ねるが、その知識に心服。神戸海軍操練所の設立に奔走。</p>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="relative mb-12 flex flex-col md:flex-row items-center">
+                <div class="timeline-dot"></div>
+                <div class="md:w-1/2 md:pr-12 md:text-right">
+                    <span class="text-blue-600 font-bold">1865-1866</span>
+                    <h3 class="text-xl font-bold">亀山社中と薩長同盟</h3>
+                    <p class="text-sm text-slate-500">長崎で日本初の商社を設立。薩長同盟という不可能を可能にし、時代の主役に。</p>
+                </div>
+                <div class="md:w-1/2 md:pl-12 mt-4 md:mt-0">
+                    <div class="bg-yellow-50 p-3 rounded-lg text-2xl">🤝 握手の力</div>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="relative mb-12 flex flex-col md:flex-row items-center">
+                <div class="timeline-dot"></div>
+                <div class="md:w-1/2 md:pr-12 md:order-1 text-left md:text-right hidden md:block">
+                    <div class="bg-red-50 p-3 rounded-lg text-2xl">🌙 志半ばで</div>
+                </div>
+                <div class="md:w-1/2 md:pl-12 md:order-2">
+                    <span class="text-blue-600 font-bold">1867</span>
+                    <h3 class="text-xl font-bold">大政奉還と近江屋の夜</h3>
+                    <p class="text-sm text-slate-500">船中八策で新国家をデザイン。大政奉還を見届けるが、京都近江屋で暗殺される。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Senchu Hassaku Blueprint -->
+    <section class="bg-slate-900 text-white py-20 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl font-black mb-6">船中八策 (Blueprint)</h2>
+                <p class="text-slate-400 mb-8 leading-relaxed">
+                    土佐へ向かう船の中で竜馬が記した、日本の「OS」を入れ替えるための8つの提案。これは単なる政治改革案ではなく、現代日本の基礎となった設計図です。
+                </p>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex items-center space-x-4 p-4 bg-white/5 rounded-lg border border-white/10">
+                        <span class="text-2xl">🏛️</span>
+                        <div>
+                            <p class="text-xs text-yellow-500 font-bold">第一策</p>
+                            <p class="font-bold">天下の政権を朝廷に奉還せよ</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 p-4 bg-white/5 rounded-lg border border-white/10">
+                        <span class="text-2xl">🗣️</span>
+                        <div>
+                            <p class="text-xs text-yellow-500 font-bold">第二策</p>
+                            <p class="font-bold">上下議政局を置き、万機公論に決せよ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="chart-container">
+                    <canvas id="blueprintChart"></canvas>
+                </div>
+                <p class="text-xs text-slate-500 mt-4">新国家構想のカテゴリー比重</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <footer class="py-20 px-6 text-center bg-white border-t">
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold mb-4">「日本を洗濯」した夢のあと</h2>
+            <p class="text-slate-600 mb-8 italic">
+                「世界の海援隊でもやるかな」
+            </p>
+            <p class="text-slate-500 text-sm leading-relaxed mb-10">
+                竜馬が最期まで夢見たのは、権力ではなく、世界を自由に駆け巡る「海援隊」の姿でした。彼が望んだ無血の革命「大政奉還」は、奇跡的に実現し、日本は植民地化の危機を脱しました。
+            </p>
+            <div class="flex justify-center items-center gap-6">
+                <div class="text-center">
+                    <div class="text-2xl">🌊</div>
+                    <p class="text-[10px] text-slate-400">VISIONARY</p>
+                </div>
+                <div class="h-8 w-px bg-slate-200"></div>
+                <div class="text-center">
+                    <div class="text-2xl">🚢</div>
+                    <p class="text-[10px] text-slate-400">MERCHANT</p>
+                </div>
+                <div class="h-8 w-px bg-slate-200"></div>
+                <div class="text-center">
+                    <div class="text-2xl">🇯🇵</div>
+                    <p class="text-[10px] text-slate-400">PATRIOT</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Charts -->
+    <script>
+        // Common Tooltip Config
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    return Array.isArray(label) ? label.join(' ') : label;
+                }
+            }
+        };
+
+        // 1. Radar Chart for Heroes
+        const ctxHeroes = document.getElementById('heroesChart').getContext('2d');
+        new Chart(ctxHeroes, {
+            type: 'radar',
+            data: {
+                labels: ['先見性 (Vision)', '交渉力 (Negotiate)', '剣術 (Sword)', '政治力 (Politics)', '人望 (Charisma)'],
+                datasets: [
+                    {
+                        label: '坂本竜馬',
+                        data: [10, 10, 8, 6, 10],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    },
+                    {
+                        label: '西郷隆盛',
+                        data: [8, 8, 7, 10, 10],
+                        borderColor: '#F97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                    },
+                    {
+                        label: '桂小五郎',
+                        data: [7, 7, 10, 8, 7],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255,255,255,0.1)' },
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        pointLabels: { color: '#94A3B8', font: { size: 10 } },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: tooltipConfig
+                }
+            }
+        });
+
+        // 2. Satcho Trade Balance
+        const ctxBalance = document.getElementById('balanceChart').getContext('2d');
+        new Chart(ctxBalance, {
+            type: 'bar',
+            data: {
+                labels: ['長州藩 (Choshu)', '薩摩藩 (Satsuma)'],
+                datasets: [
+                    {
+                        label: '米の保有量',
+                        data: [10, 2],
+                        backgroundColor: '#10B981',
+                    },
+                    {
+                        label: '武器・物資の調達力',
+                        data: [2, 10],
+                        backgroundColor: '#F97316',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, display: false },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    tooltip: tooltipConfig
+                }
+            }
+        });
+
+        // 3. Blueprint Doughnut
+        const ctxBlueprint = document.getElementById('blueprintChart').getContext('2d');
+        new Chart(ctxBlueprint, {
+            type: 'doughnut',
+            data: {
+                labels: [['政治体制', '(大政奉還/議会)'], '外交・条約改正', '国防・軍事', '経済・通貨制度'],
+                datasets: [{
+                    data: [40, 20, 20, 20],
+                    backgroundColor: ['#F59E0B', '#3B82F6', '#EF4444', '#10B981'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#94A3B8', boxWidth: 12, font: { size: 10 } } },
+                    tooltip: tooltipConfig
+                },
+                cutout: '70%'
+            }
+        });
+    </script>
+</body>
+</html>
